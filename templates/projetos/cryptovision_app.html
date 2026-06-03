@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoVision - Premium Dashboard</title>
+    <!-- Import Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts for premium look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cryptovision.css') }}">
+</head>
+<body>
+    <!-- Decorative Blurs -->
+    <div class="bg-blob-1"></div>
+    <div class="bg-blob-2"></div>
+
+    <header>
+        <a href="{{ url_for('projetos') }}" class="back-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Projects
+        </a>
+        <h1>CryptoVision</h1>
+    </header>
+
+    <div class="container">
+        <!-- Portfolio Total Value -->
+        <div class="glass-panel portfolio-summary">
+            <div class="summary-header">Total Portfolio Value</div>
+            <div class="total-value" id="total-portfolio-value">$0.00</div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Add Holding Form -->
+            <div class="glass-panel add-holding-section">
+                <h2>Add Holding</h2>
+                <form id="add-holding-form" class="glass-form">
+                    <div class="form-group">
+                        <label for="coin_id">Coin ID</label>
+                        <input type="text" id="coin_id" name="coin_id" required placeholder="e.g. bitcoin">
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" step="any" id="amount" name="amount" required placeholder="e.g. 0.5">
+                    </div>
+                    <div class="form-group">
+                        <label for="buy_price">Buy Price (USD)</label>
+                        <input type="number" step="any" id="buy_price" name="buy_price" required placeholder="e.g. 50000">
+                    </div>
+                    <button type="submit" class="glass-btn">Add to Portfolio</button>
+                </form>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="chart-section">
+                <div class="chart-header">
+                    Portfolio Allocation
+                </div>
+                <div class="canvas-container">
+                    <canvas id="portfolioChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamically Loaded Portfolio Items Container -->
+        <div class="portfolio-section">
+            <h2 class="section-title">Your Assets</h2>
+            <div class="cards-grid" id="portfolio-items-container">
+                <!-- Portfolio items will be dynamically injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Implementation handled by API Agent -->
+    <script src="{{ url_for('static', filename='js/cryptovision.js') }}"></script>
+</body>
+</html>

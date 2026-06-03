@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniFlow - Galeria Comunitária</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0a0f;
+            --lime: #d2ff00;
+            --lime-glow: rgba(210, 255, 0, 0.2);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #ffffff;
+            --text-muted: #888890;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Background glow effect */
+        .bg-glow {
+            position: fixed;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80vw;
+            height: 50vh;
+            background: radial-gradient(ellipse at center, var(--lime-glow) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        header {
+            position: relative;
+            z-index: 10;
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .logo span {
+            color: var(--lime);
+        }
+
+        .btn-back {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        main {
+            position: relative;
+            z-index: 10;
+            flex: 1;
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+
+        h1 span {
+            color: var(--lime);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Masonry Grid Setup */
+        .gallery-grid {
+            columns: 1;
+            column-gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .gallery-grid {
+                columns: 2;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .gallery-grid {
+                columns: 3;
+            }
+        }
+
+        .card {
+            break-inside: avoid;
+            margin-bottom: 2rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--lime);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(210, 255, 0, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(210, 255, 0, 0.1);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .node-badge {
+            background: rgba(210, 255, 0, 0.1);
+            color: var(--lime);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        .card-preview {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 1.5rem;
+            height: 160px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-preview svg {
+            width: 100%;
+            height: 100%;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover .card-preview svg {
+            opacity: 1;
+        }
+
+        .card-footer {
+            margin-top: auto;
+        }
+
+        .btn-access {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background: var(--lime);
+            color: #000;
+            text-decoration: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-access::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: -1;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .btn-access:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(210, 255, 0, 0.4);
+        }
+
+        .btn-access:hover::after {
+            transform: translateY(0);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: var(--lime);
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(210, 255, 0, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--lime);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-muted);
+            grid-column: 1 / -1;
+        }
+
+        /* Custom SVG grid background for previews */
+        .svg-bg-pattern {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 15px 15px;
+            opacity: 0.5;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <header>
+        <a href="/projetos/omniflow" class="logo">
+            Omni<span>Flow</span>
+        </a>
+        <a href="/projetos/omniflow/app" class="btn-back">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Voltar para o Editor
+        </a>
+    </header>
+
+    <main>
+        <div class="hero-section">
+            <h1>Galeria <span>Comunitária</span></h1>
+            <p class="subtitle">Explore e inspire-se com workflows incríveis criados pela nossa comunidade. Descubra novas formas de otimizar seus processos.</p>
+        </div>
+
+        <div id="gallery" class="gallery-grid">
+            <div class="loading" id="loading-state">
+                <div class="spinner"></div>
+                <p>Carregando workflows...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchWorkflows();
+        });
+
+        async function fetchWorkflows() {
+            const gallery = document.getElementById('gallery');
+            const loading = document.getElementById('loading-state');
+
+            try {
+                const response = await fetch('/api/omniflow');
+                if (!response.ok) throw new Error('Erro ao buscar workflows');
+                
+                const workflows = await response.json();
+                
+                loading.style.display = 'none';
+
+                if (workflows.length === 0) {
+                    gallery.innerHTML = `
+                        <div class="empty-state">
+                            <h3>Nenhum workflow encontrado</h3>
+                            <p>Seja o primeiro a compartilhar uma criação fantástica!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                workflows.forEach((wf, index) => {
+                    let nodesArray = [];
+                    // Handle case where nodes_json is a direct array, or an object with a .nodes array
+                    if (Array.isArray(wf.nodes_json)) {
+                        nodesArray = wf.nodes_json;
+                    } else if (wf.nodes_json && Array.isArray(wf.nodes_json.nodes)) {
+                        nodesArray = wf.nodes_json.nodes;
+                    } else if (wf.nodes_json) {
+                        nodesArray = Object.keys(wf.nodes_json);
+                    }
+
+                    const nodeCount = nodesArray.length;
+                    const date = new Date(wf.updated_at).toLocaleDateString('pt-BR', {
+                        day: '2-digit', month: 'short', year: 'numeric'
+                    });
+
+                    // Generate a semi-random SVG preview based on the workflow data
+                    const previewSvg = generatePreviewSVG(nodesArray);
+
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <h3 class="card-title">${wf.name || 'Untitled Workflow'}</h3>
+                            <div class="card-meta">
+                                <span class="node-badge">${nodeCount} Nós</span>
+                                <span>•</span>
+                                <span>Atualizado em ${date}</span>
+                            </div>
+                        </div>
+                        <div class="card-preview">
+                            <div class="svg-bg-pattern"></div>
+                            ${previewSvg}
+                        </div>
+                        <div class="card-footer">
+                            <a href="/projetos/omniflow/app?id=${wf.id}" class="btn-access" title="Abrir no Editor">Abrir no Editor</a>
+                        </div>
+                    `;
+                    
+                    gallery.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error(error);
+                loading.innerHTML = `
+                    <div style="color: #ff5555; display: flex; flex-direction: column; align-items: center;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem;">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <p>Não foi possível carregar a galeria.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function generatePreviewSVG(nodes) {
+            // Limit to max 5 nodes for preview
+            const displayNodes = nodes.slice(0, 5);
+            
+            if (displayNodes.length === 0) {
+                return `
+                    <svg viewBox="0 0 260 140" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="z-index: 1;">
+                        <rect x="110" y="55" width="40" height="30" rx="6" fill="none" stroke="var(--lime)" stroke-width="2" stroke-dasharray="4 4"/>
+                    </svg>
+                `;
+            }
+
+            let svgContent = '';
+            const w = 260;
+            const h = 140;
+            
+            const positions = displayNodes.map((n, i) => {
+                const cx = 30 + (i * (w - 60) / Math.max(1, displayNodes.length - 1));
+                const cy = h/2 + Math.sin(i * Math.PI) * 20 + (i % 2 === 0 ? -15 : 15);
+                return {x: cx, y: cy};
+            });
+
+            // Draw connections
+            for (let i = 0; i < positions.length - 1; i++) {
+                const p1 = positions[i];
+                const p2 = positions[i+1];
+                const ctrl1X = p1.x + (p2.x - p1.x) / 2;
+                svgContent += `<path d="M ${p1.x} ${p1.y} C ${ctrl1X} ${p1.y}, ${ctrl1X} ${p2.y}, ${p2.x} ${p2.y}" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" />`;
+            }
+
+            // Draw nodes
+            positions.forEach((p, i) => {
+                const isStart = i === 0;
+                const isEnd = i === positions.length - 1;
+                const color = isStart ? '#fff' : (isEnd ? 'var(--lime)' : 'rgba(255,255,255,0.6)');
+                
+                svgContent += `<rect x="${p.x - 14}" y="${p.y - 10}" width="28" height="20" rx="4" fill="#15151a" stroke="${color}" stroke-width="2" />`;
+                svgContent += `<circle cx="${p.x}" cy="${p.y}" r="2" fill="${color}" />`;
+            });
+
+            return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="z-index: 1;">${svgContent}</svg>`;
+        }
+    </script>
+</body>
+</html>

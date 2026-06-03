@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow | Produtividade com IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="proj-page theme-taskflow">
+
+    <nav class="proj-nav">
+        <a href="{{ url_for('home') }}" class="proj-logo">MATHEUS.</a>
+        <div>
+            <a href="{{ url_for('projetos') }}" class="proj-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: transparent; color: #a1a1aa;">Voltar</a>
+        </div>
+    </nav>
+
+    <header class="proj-hero">
+        <div class="proj-hero-content">
+            <h1 class="proj-title">Domine o caos estrutural.</h1>
+            <p class="proj-subtext">A plataforma de gestão que analisa prazos e impacto para sugerir sua próxima ação antes de você precisar decidir.</p>
+            <a href="{{ url_for('taskflow_app') }}" class="proj-btn">Launch Application</a>
+        </div>
+        <div class="proj-visual-box">
+            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" class="accent-color">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+            </svg>
+        </div>
+    </header>
+
+    <section class="proj-section">
+        <div class="proj-grid-split">
+            <div>
+                <span class="proj-label">O Contexto</span>
+                <h2 class="proj-h2">Reduzindo a sobrecarga cognitiva da gestão.</h2>
+            </div>
+            <div>
+                <p class="proj-p mb-6">As ferramentas tradicionais exigem que você gaste tempo organizando tarefas em vez de executá-las. Quadros lotados e falta de clareza matam a produtividade.</p>
+                <p class="proj-p">O TaskFlow introduz uma arquitetura Kanban turbinada por algoritmos. Ele analisa o impacto e os prazos, destacando automaticamente o que realmente importa agora através de marcações visuais.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="proj-section" style="border-bottom: 1px solid #1a1a1a;">
+        <span class="proj-label">Arquitetura</span>
+        <h2 class="proj-h2" style="max-width: 100%;">Stack Técnico</h2>
+        
+        <ul class="proj-list">
+            <li class="proj-list-item accent-border">
+                <div class="proj-list-title">Python & Flask</div>
+                <div class="proj-list-desc">Backend robusto e escalável processando rotas RESTful para sincronização de dados.</div>
+            </li>
+            <li class="proj-list-item accent-border">
+                <div class="proj-list-title">SQLite & SQLAlchemy</div>
+                <div class="proj-list-desc">Persistência de dados segura com ORM local para alta velocidade de leitura.</div>
+            </li>
+            <li class="proj-list-item accent-border">
+                <div class="proj-list-title">Vanilla JavaScript</div>
+                <div class="proj-list-desc">Motor de Drag & Drop desenvolvido do zero sem dependências externas pesadas.</div>
+            </li>
+            <li class="proj-list-item accent-border">
+                <div class="proj-list-title">Automação de Prioridade</div>
+                <div class="proj-list-desc">Algoritmo heurístico que eleva cards baseados na data de entrega e peso.</div>
+            </li>
+        </ul>
+    </section>
+
+    <footer style="padding: 4rem 5%; text-align: center; color: #71717a; font-size: 0.9rem; font-family: 'Space Grotesk', sans-serif;">
+        TaskFlow &copy; Matheus Sousa dos Santos
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoVision | Monitor de Ativos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="proj-page theme-cryptovision">
+
+    <nav class="proj-nav">
+        <a href="{{ url_for('home') }}" class="proj-logo">MATHEUS.</a>
+        <div>
+            <a href="{{ url_for('projetos') }}" class="proj-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: transparent; color: #a1a1aa;">Voltar</a>
+        </div>
+    </nav>
+
+    <header class="proj-hero">
+        <div class="proj-hero-content">
+            <h1 class="proj-title">Dados de mercado, sem ruído.</h1>
+            <p class="proj-subtext">Monitoramento em tempo real de ativos criptográficos. Preços, capitalização e variação percentual direto da fonte.</p>
+            <a href="{{ url_for('crypto_app') }}" class="proj-btn">Launch Application</a>
+        </div>
+        <div class="proj-visual-box">
+            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" class="accent-color">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+        </div>
+    </header>
+
+    <section class="proj-section">
+        <div class="proj-grid-split">
+            <div>
+                <span class="proj-label">O Contexto</span>
+                <h2 class="proj-h2">Latência é tudo.</h2>
+            </div>
+            <div>
+                <p class="proj-p mb-6">A maioria dos dashboards financeiros sofre de poluição visual extrema. Eles tentam mostrar dezenas de métricas secundárias, obscurecendo o que importa: a variação de preço em tempo real.</p>
+                <p class="proj-p">O CryptoVision corta o excesso. Utilizando conexões diretas via Fetch API, ele constrói gráficos limpos e listas focadas, permitindo leitura instantânea das tendências de mercado do Top 10.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="proj-section" style="border-bottom: 1px solid #1a1a1a;">
+        <span class="proj-label">Arquitetura</span>
+        <h2 class="proj-h2" style="max-width: 100%;">Stack Técnico</h2>
+        
+        <ul class="proj-list">
+            <li class="proj-list-item accent-border">
+                <div class="proj-list-title">CoinGecko REST API</div>
+                <div class="proj-list-desc">Ingestão de dados ao vivo do mercado global, utilizando rate limits no lado do cliente (Client-side fetch).</div>
+            </li>
+            <li class="proj-list-item accent-border">
+                <div class="proj-list-title">Chart.js Engine</div>
+                <div class="proj-list-desc">Renderização no canvas HTML5 para gráficos de séries temporais levíssimos e de alta resolução.</div>
+            </li>
+            <li class="proj-list-item accent-border">
+                <div class="proj-list-title">Assíncrono e Paralelo</div>
+                <div class="proj-list-desc">Múltiplas chamadas de fetch rodando concorrentemente usando Promise.all para carregar todo o dashboard instantaneamente.</div>
+            </li>
+            <li class="proj-list-item accent-border">
+                <div class="proj-list-title">DOM Manipulation Local</div>
+                <div class="proj-list-desc">Atualizações de estado em tempo real construídas em Vanilla JS puríssimo, sem abstrações bloqueantes de framework.</div>
+            </li>
+        </ul>
+    </section>
+
+    <footer style="padding: 4rem 5%; text-align: center; color: #71717a; font-size: 0.9rem; font-family: 'Space Grotesk', sans-serif;">
+        CryptoVision &copy; Matheus Sousa dos Santos
+    </footer>
+
+</body>
+</html>

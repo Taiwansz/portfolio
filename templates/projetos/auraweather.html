@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraWeather | Meteorologia Inteligente</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="proj-page theme-auraweather">
+
+    <nav class="proj-nav">
+        <a href="{{ url_for('home') }}" class="proj-logo">MATHEUS.</a>
+        <div>
+            <a href="{{ url_for('projetos') }}" class="proj-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: transparent; color: #a1a1aa;">Voltar</a>
+        </div>
+    </nav>
+
+    <header class="proj-hero">
+        <div class="proj-hero-content">
+            <h1 class="proj-title">Condições climáticas. Precisão absoluta.</h1>
+            <p class="proj-subtext">Previsões instantâneas, temperatura e umidade com base em geolocalização global em milissegundos.</p>
+            <a href="{{ url_for('weather_app') }}" class="proj-btn">Launch Application</a>
+        </div>
+        <div class="proj-visual-box">
+            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" class="accent-color">
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="M5 5l1.5 1.5"></path>
+                <path d="M17.5 17.5L19 19"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="M5 19l1.5-1.5"></path>
+                <path d="M17.5 6.5L19 5"></path>
+                <circle cx="12" cy="12" r="4"></circle>
+            </svg>
+        </div>
+    </header>
+
+    <section class="proj-section">
+        <div class="proj-grid-split">
+            <div>
+                <span class="proj-label">O Contexto</span>
+                <h2 class="proj-h2">Simplicidade contra a poluição.</h2>
+            </div>
+            <div>
+                <p class="proj-p mb-6">A maioria dos apps de clima esconde a temperatura atual atrás de anúncios ou mapas pesados e interativos que não carregam rápido.</p>
+                <p class="proj-p">O AuraWeather foca apenas no essencial. Se você quer saber a condição de uma cidade, você digita o nome e os dados meteorológicos reais do OpenWeatherMap aparecem instantaneamente na tela.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="proj-section" style="border-bottom: 1px solid #1a1a1a;">
+        <span class="proj-label">Arquitetura</span>
+        <h2 class="proj-h2" style="max-width: 100%;">Stack Técnico</h2>
+        
+        <ul class="proj-list">
+            <li class="proj-list-item accent-border">
+                <div class="proj-list-title">OpenWeatherMap API</div>
+                <div class="proj-list-desc">Conexão direta com a maior API meteorológica do mercado.</div>
+            </li>
+            <li class="proj-list-item accent-border">
+                <div class="proj-list-title">Geocoding Reverso</div>
+                <div class="proj-list-desc">Transformação da entrada em string do usuário para coordenadas lat/lon nativamente.</div>
+            </li>
+            <li class="proj-list-item accent-border">
+                <div class="proj-list-title">Tratamento de Erros Client-side</div>
+                <div class="proj-list-desc">Mapeamento de 404s (Cidade não encontrada) tratado visualmente sem refresh na página.</div>
+            </li>
+            <li class="proj-list-item accent-border">
+                <div class="proj-list-title">Design Minimalista Dinâmico</div>
+                <div class="proj-list-desc">Renderização dinâmica de UI baseada no código de clima reportado pela API.</div>
+            </li>
+        </ul>
+    </section>
+
+    <footer style="padding: 4rem 5%; text-align: center; color: #71717a; font-size: 0.9rem; font-family: 'Space Grotesk', sans-serif;">
+        AuraWeather &copy; Matheus Sousa dos Santos
+    </footer>
+
+</body>
+</html>

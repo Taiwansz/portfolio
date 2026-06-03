@@ -3,67 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projetos - Matheus Sousa dos Santos</title>
+    <meta name="description" content="Projetos de Matheus Sousa dos Santos — Portfólio de desenvolvimento web com HTML, CSS, JavaScript e Flask.">
+    <title>Projetos — Matheus Sousa dos Santos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <header>
-        <nav>
-            <img src="{{ url_for('static', filename='images/M.png') }}" alt="Logo" class="nav-logo">
-            <div class="cntr-nav">
-                <a href="{{ url_for('home') }}">Início</a>
-                <a href="{{ url_for('sobre') }}">Sobre Mim</a>
-                <a href="{{ url_for('projetos') }}">Projetos</a>
+
+    
+    <!-- 1. Cinematic Preloader -->
+    <div id="preloader">
+        <span id="loader-count">0%</span>
+    </div>
+
+    <!-- 2. Page Transition Layer -->
+    <div class="page-transition-layer"></div>
+
+    <div class="cursor-follower" id="cursor-follower"></div>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="nav-logo">
+                <img src="{{ url_for('static', filename='images/M.png') }}" alt="Logo">
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link">Início</a>
+                <a href="{{ url_for('sobre') }}" class="nav-link">Sobre Mim</a>
+                <a href="{{ url_for('projetos') }}" class="nav-link active">Projetos</a>
             </div>
-        </nav>
-    </header>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="{{ url_for('home') }}">Início</a>
+        <a href="{{ url_for('sobre') }}">Sobre Mim</a>
+        <a href="{{ url_for('projetos') }}">Projetos</a>
+    </div>
 
     <main>
-        <section class="project-section">
-            <div class="two">
-                <div class="lft-two">
-                </div>
-                <div class="rght-two">
-                    <h1>Portfólio</h1>
-                    <p>Desenvolvimento de um portfólio pessoal responsivo usando HTML, CSS, JavaScript e Flask, com foco em destacar projetos e habilidades em uma interface intuitiva e moderna..</p>
-                    <a href="{{ url_for('portfolio') }}" class="btn-saiba-mais">Saiba Mais</a>
-                </div>
-            </div>
+        <!-- Page Hero -->
+        <section class="page-hero">
+            <h1 class="text-display clip-reveal">Proje<span>tos</span></h1>
+            <p class="text-eyebrow scroll-reveal">Confira meus trabalhos e experiências</p>
         </section>
 
-        <section class="project-section">
-            <div class="two">
-                <div class="lft-two">
+        <!-- Projects List -->
+        <section class="projects-list" style="padding: 0 5vw 10rem 5vw;">
+            <!-- Project 1 (New) -->
+            <div class="project-info scroll-reveal stagger-1" style="margin-bottom: 2rem; border-left-color: var(--color-lime);">
+                <span class="project-number">01</span>
+                <h2 class="text-heading">OmniFlow AI</h2>
+                <p class="text-body" style="max-width: 800px; margin: 1.5rem 0;">A joia da coroa. Um editor visual (Node-based Orchestrator) construído do zero em Canvas/Vanilla JS. Permite desenhar arquiteturas lógicas para Agentes de IA conectando nós através de curvas de Bezier SVG. Os grafos são salvos em JSON no banco de dados SQLite.</p>
+                <div class="project-tags" style="display: flex; gap: 0.5rem; margin-bottom: 2.5rem;">
+                    <span class="tag">AI Orchestration</span>
+                    <span class="tag">Canvas/SVG</span>
+                    <span class="tag">Flask/SQLite</span>
                 </div>
-                <div class="rght-two">
-                    <h1>Projeto 2</h1>
-                    <p>Mais detalhes sobre o Projeto 2 em breve!</p>
-                    <a href="javascript:void(0);" onclick="alert('Mais detalhes sobre o Projeto 2 em breve!')" class="btn-saiba-mais">Saiba Mais</a>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="{{ url_for('omniflow') }}" class="btn-primary">Ver Projeto</a>
                 </div>
             </div>
-        </section>
 
-        <section class="project-section">
-            <div class="two">
-                <div class="lft-two">
+            <!-- SonicWeave Project Card -->
+            <div class="project-info scroll-reveal stagger-1-5" style="margin-bottom: 2rem; border-left-color: var(--color-accent);">
+                <span class="project-number">01.5</span>
+                <h2 class="text-heading">SonicWeave</h2>
+                <p class="text-body" style="max-width: 800px; margin: 1.5rem 0;">A God-tier web-based digital synthesizer and audio workstation built natively with the Web Audio API and real-time canvas visualizers.</p>
+                <div class="project-tags" style="display: flex; gap: 0.5rem; margin-bottom: 2.5rem;">
+                    <span class="tag">Web Audio API</span>
+                    <span class="tag">HTML5 Canvas</span>
+                    <span class="tag">Procedural Generation</span>
                 </div>
-                <div class="rght-two">
-                    <h1>Projeto 3</h1>
-                    <p>Mais detalhes sobre o Projeto 3 em breve!</p>
-                    <a href="javascript:void(0);" onclick="alert('Mais detalhes sobre o Projeto 3 em breve!')" class="btn-saiba-mais">Saiba Mais</a>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="/projetos/sonicweave" class="btn-primary">Ver Projeto</a>
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="project-info scroll-reveal stagger-2" style="margin-bottom: 2rem;">
+                <span class="project-number">02</span>
+                <h2 class="text-heading">TaskFlow</h2>
+                <p class="text-body" style="max-width: 800px; margin: 1.5rem 0;">Quadro Kanban interativo focado em produtividade. Construído do zero utilizando a API nativa de Drag and Drop do HTML5 e LocalStorage para persistência de dados. Interface totalmente "Glassmorphism".</p>
+                <div class="project-tags" style="display: flex; gap: 0.5rem; margin-bottom: 2.5rem;">
+                    <span class="tag">HTML5 Drag & Drop</span>
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">LocalStorage</span>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="{{ url_for('taskflow') }}" class="btn-primary">Ver Projeto</a>
+                </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="project-info scroll-reveal stagger-3" style="margin-bottom: 2rem;">
+                <span class="project-number">03</span>
+                <h2 class="text-heading">CryptoVision</h2>
+                <p class="text-body" style="max-width: 800px; margin: 1.5rem 0;">Dashboard financeiro em tempo real que consome a API da CoinGecko. Visualização elegante de histórico de preços de criptomoedas através da biblioteca Chart.js.</p>
+                <div class="project-tags" style="display: flex; gap: 0.5rem; margin-bottom: 2.5rem;">
+                    <span class="tag">API REST</span>
+                    <span class="tag">Chart.js</span>
+                    <span class="tag">Assíncrono</span>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="{{ url_for('cryptovision') }}" class="btn-primary">Ver Projeto</a>
+                </div>
+            </div>
+
+            <!-- Project 4 -->
+            <div class="project-info scroll-reveal stagger-4" style="margin-bottom: 2rem;">
+                <span class="project-number">04</span>
+                <h2 class="text-heading">AuraWeather</h2>
+                <p class="text-body" style="max-width: 800px; margin: 1.5rem 0;">Dashboard meteorológico premium. A interface reage dinamicamente aos dados recebidos da OpenMeteo API, alterando suas cores e animações de acordo com o clima.</p>
+                <div class="project-tags" style="display: flex; gap: 0.5rem; margin-bottom: 2.5rem;">
+                    <span class="tag">OpenMeteo API</span>
+                    <span class="tag">CSS Dinâmico</span>
+                    <span class="tag">UI/UX Avançada</span>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="{{ url_for('auraweather') }}" class="btn-primary">Ver Projeto</a>
+                </div>
+            </div>
+
+            <!-- Project 5 -->
+            <div class="project-info scroll-reveal stagger-5">
+                <span class="project-number">05</span>
+                <h2 class="text-heading">Este Portfólio</h2>
+                <p class="text-body" style="max-width: 800px; margin: 1.5rem 0;">Desenvolvimento do próprio portfólio responsivo usando Flask, com foco em uma arquitetura CSS moderna (variáveis e propriedades customizadas) para transição de temas e alta performance.</p>
+                <div class="project-tags" style="display: flex; gap: 0.5rem; margin-bottom: 2.5rem;">
+                    <span class="tag">Flask</span>
+                    <span class="tag">CSS Custom Properties</span>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="{{ url_for('portfolio') }}" class="btn-outline">Ver Arquitetura</a>
                 </div>
             </div>
         </section>
-        
-    <footer>
-        <div class="container">
+    </main>
+
+    <!-- Big CTA Footer -->
+    <section class="big-cta scroll-reveal">
+        <div class="big-cta-bg"></div>
+        <h2 class="big-cta-text">VAMOS<br>CONVERSAR</h2>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='images/M.png') }}" alt="Logo" style="width: 40px; border-radius: 50%;">
+                Matheus Sousa
+            </div>
             <div class="social-links">
-                <a href="https://www.instagram.com/taiwan.sz/" target="_blank" rel="noopener noreferrer">Instagram</a>
-                <a href="https://github.com/Taiwansz" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a href="https://www.linkedin.com/in/mth3us" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href="https://www.instagram.com/taiwan.sz/" target="_blank" rel="noopener noreferrer" class="social-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                    Instagram
+                </a>
+                <a href="https://github.com/Taiwansz" target="_blank" rel="noopener noreferrer" class="social-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/mth3us" target="_blank" rel="noopener noreferrer" class="social-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                    LinkedIn
+                </a>
             </div>
         </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Matheus Sousa dos Santos. Todos os direitos reservados.</p>
+        </div>
     </footer>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

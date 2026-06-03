@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-hover: rgba(255, 255, 255, 0.08);
+            --card-bg: rgba(20, 20, 20, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(255, 255, 255, 0.04), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.04), transparent 25%);
+        }
+
+        header {
+            padding: 2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .back-btn {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            background: var(--glass-bg);
+        }
+
+        .back-btn:hover {
+            color: var(--text-main);
+            background: var(--accent-hover);
+        }
+
+        h1 {
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            font-size: 1.5rem;
+        }
+
+        main {
+            flex: 1;
+            padding: 3rem;
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .kanban-column {
+            flex: 1;
+            max-width: 350px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            min-height: 70vh;
+        }
+
+        .column-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .column-title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .task-count {
+            background: var(--glass-border);
+            color: var(--text-muted);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .task-list {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            overflow-y: auto;
+        }
+
+        /* Drag over state */
+        .task-list.drag-over {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .task-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 1.2rem;
+            cursor: grab;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            position: relative;
+        }
+
+        .task-card:active {
+            cursor: grabbing;
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .task-card.dragging {
+            opacity: 0.5;
+        }
+
+        .task-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .task-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .task-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: var(--glass-border);
+            color: #ccc;
+        }
+        
+        .tag.urgent {
+            background: rgba(220, 53, 69, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+
+        .tag.feature {
+            background: rgba(13, 110, 253, 0.2);
+            color: #6ea8fe;
+            border: 1px solid rgba(13, 110, 253, 0.3);
+        }
+
+        .add-task-btn {
+            margin: 1rem 1.5rem 1.5rem;
+            padding: 0.8rem;
+            background: transparent;
+            border: 1px dashed var(--glass-border);
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .add-task-btn:hover {
+            background: var(--glass-bg);
+            color: var(--text-main);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 900px) {
+            main {
+                flex-direction: column;
+                align-items: center;
+            }
+            .kanban-column {
+                width: 100%;
+                max-width: 100%;
+                min-height: auto;
+            }
+        }
+
+        /* Modal Styling */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+        .modal-overlay.active {
+            opacity: 1; pointer-events: auto;
+        }
+        .modal-content {
+            background: rgba(20, 20, 25, 0.9);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 2rem;
+            width: 100%; max-width: 400px;
+            transform: translateY(20px); transition: transform 0.3s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+        .modal-title {
+            font-size: 1.2rem; font-weight: 500; margin-bottom: 1.5rem;
+        }
+        .modal-input {
+            width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border);
+            color: var(--text-main); padding: 0.8rem 1rem; border-radius: 8px;
+            margin-bottom: 1rem; font-family: inherit; font-size: 0.95rem;
+            outline: none; transition: border-color 0.2s;
+        }
+        .modal-input:focus {
+            border-color: rgba(255,255,255,0.3);
+        }
+        textarea.modal-input {
+            resize: vertical; min-height: 80px;
+        }
+        .modal-actions {
+            display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;
+        }
+        .btn-modal {
+            padding: 0.6rem 1.2rem; border-radius: 6px; border: none;
+            font-family: inherit; font-size: 0.9rem; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-cancel {
+            background: transparent; color: var(--text-muted);
+            border: 1px solid var(--glass-border);
+        }
+        .btn-cancel:hover {
+            color: var(--text-main); background: rgba(255,255,255,0.05);
+        }
+        .btn-submit {
+            background: #fff; color: #000; font-weight: 500;
+        }
+        .btn-submit:hover {
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{{ url_for('projetos') }}" class="back-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Projects
+        </a>
+        <h1>TaskFlow</h1>
+        <div style="width: 120px;"></div> <!-- Spacer for centering -->
+    </header>
+
+    <div class="modal-overlay" id="task-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Create New Task</h3>
+            <input type="text" id="modal-task-title" class="modal-input" placeholder="Task Title" autocomplete="off">
+            <textarea id="modal-task-desc" class="modal-input" placeholder="Description (Optional)"></textarea>
+            <div class="modal-actions">
+                <button class="btn-modal btn-cancel" id="modal-cancel">Cancel</button>
+                <button class="btn-modal btn-submit" id="modal-submit">Create Task</button>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- To Do Column -->
+        <div class="kanban-column">
+            <div class="column-header">
+                <h2 class="column-title">To Do</h2>
+                <span class="task-count" id="todo-count">0</span>
+            </div>
+            <div class="task-list" id="todo-list"></div>
+            <button class="add-task-btn" data-status="todo">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Task
+            </button>
+        </div>
+
+        <!-- In Progress Column -->
+        <div class="kanban-column">
+            <div class="column-header">
+                <h2 class="column-title">In Progress</h2>
+                <span class="task-count" id="progress-count">0</span>
+            </div>
+            <div class="task-list" id="progress-list"></div>
+            <button class="add-task-btn" data-status="in_progress">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Task
+            </button>
+        </div>
+
+        <!-- Done Column -->
+        <div class="kanban-column">
+            <div class="column-header">
+                <h2 class="column-title">Done</h2>
+                <span class="task-count" id="done-count">0</span>
+            </div>
+            <div class="task-list" id="done-list"></div>
+            <button class="add-task-btn" data-status="done">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Task
+            </button>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const lists = {
+                'todo': document.getElementById('todo-list'),
+                'in_progress': document.getElementById('progress-list'),
+                'done': document.getElementById('done-list')
+            };
+
+            const listIdToStatus = {
+                'todo-list': 'todo',
+                'progress-list': 'in_progress',
+                'done-list': 'done'
+            };
+
+            const updateCounts = () => {
+                document.getElementById('todo-count').textContent = lists['todo'].children.length;
+                document.getElementById('progress-count').textContent = lists['in_progress'].children.length;
+                document.getElementById('done-count').textContent = lists['done'].children.length;
+            };
+
+            function createTaskElement(task) {
+                const div = document.createElement('div');
+                div.className = 'task-card';
+                div.draggable = true;
+                div.id = `task-${task.id}`;
+                div.dataset.taskId = task.id;
+
+                const title = document.createElement('h3');
+                title.className = 'task-title';
+                title.textContent = task.title;
+
+                const desc = document.createElement('p');
+                desc.className = 'task-desc';
+                desc.textContent = task.description || '';
+
+                div.appendChild(title);
+                if (task.description) {
+                    div.appendChild(desc);
+                }
+
+                div.addEventListener('dragstart', (e) => {
+                    div.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', div.id);
+                    setTimeout(() => div.style.opacity = '0.5', 0);
+                });
+
+                div.addEventListener('dragend', () => {
+                    div.classList.remove('dragging');
+                    div.style.opacity = '1';
+                    updateCounts();
+                });
+
+                return div;
+            }
+
+            async function fetchTasks() {
+                try {
+                    const response = await fetch('/api/tasks');
+                    if (!response.ok) throw new Error('Failed to fetch tasks');
+                    const tasks = await response.json();
+                    
+                    Object.values(lists).forEach(list => list.innerHTML = '');
+
+                    tasks.forEach(task => {
+                        const el = createTaskElement(task);
+                        if (lists[task.status]) {
+                            lists[task.status].appendChild(el);
+                        }
+                    });
+                    updateCounts();
+                } catch (error) {
+                    console.error('Error fetching tasks:', error);
+                }
+            }
+
+            Object.values(lists).forEach(list => {
+                list.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    list.classList.add('drag-over');
+                    const afterElement = getDragAfterElement(list, e.clientY);
+                    const draggable = document.querySelector('.dragging');
+                    if (draggable) {
+                        if (afterElement == null) {
+                            list.appendChild(draggable);
+                        } else {
+                            list.insertBefore(draggable, afterElement);
+                        }
+                    }
+                });
+
+                list.addEventListener('dragleave', () => {
+                    list.classList.remove('drag-over');
+                });
+
+                list.addEventListener('drop', async (e) => {
+                    e.preventDefault();
+                    list.classList.remove('drag-over');
+                    const id = e.dataTransfer.getData('text/plain');
+                    const draggable = document.getElementById(id);
+                    if (draggable) {
+                        const newStatus = listIdToStatus[list.id];
+                        const taskId = draggable.dataset.taskId;
+                        
+                        try {
+                            const response = await fetch(`/api/tasks/${taskId}`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ status: newStatus })
+                            });
+                            if (!response.ok) throw new Error('Failed to update task status');
+                        } catch (error) {
+                            console.error('Error updating task:', error);
+                        }
+                        updateCounts();
+                    }
+                });
+            });
+
+            let currentStatusForModal = null;
+            const modal = document.getElementById('task-modal');
+            const titleInput = document.getElementById('modal-task-title');
+            const descInput = document.getElementById('modal-task-desc');
+            const btnCancel = document.getElementById('modal-cancel');
+            const btnSubmit = document.getElementById('modal-submit');
+
+            function closeModal() {
+                modal.classList.remove('active');
+                titleInput.value = '';
+                descInput.value = '';
+                currentStatusForModal = null;
+            }
+
+            btnCancel.addEventListener('click', closeModal);
+
+            btnSubmit.addEventListener('click', async () => {
+                const title = titleInput.value.trim();
+                const description = descInput.value.trim();
+                const status = currentStatusForModal;
+                
+                if (!title) {
+                    titleInput.style.borderColor = '#ff4444';
+                    setTimeout(() => titleInput.style.borderColor = 'var(--glass-border)', 1000);
+                    return;
+                }
+
+                btnSubmit.textContent = 'Saving...';
+                try {
+                    const response = await fetch('/api/tasks', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title, description, status })
+                    });
+                    if (!response.ok) throw new Error('Failed to create task');
+                    
+                    const newTask = await response.json();
+                    const el = createTaskElement(newTask);
+                    lists[status].appendChild(el);
+                    updateCounts();
+                    closeModal();
+                } catch (error) {
+                    console.error('Error creating task:', error);
+                    alert('Failed to create task.');
+                } finally {
+                    btnSubmit.textContent = 'Create Task';
+                }
+            });
+
+            document.querySelectorAll('.add-task-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentStatusForModal = btn.getAttribute('data-status');
+                    modal.classList.add('active');
+                    setTimeout(() => titleInput.focus(), 100);
+                });
+            });
+
+            function getDragAfterElement(container, y) {
+                const draggableElements = [...container.querySelectorAll('.task-card:not(.dragging)')];
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2;
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset: offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+
+            fetchTasks();
+        });
+    </script>
+</body>
+</html>

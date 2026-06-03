@@ -3,99 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sobre o Portfólio</title>
+    <meta name="description" content="Detalhes sobre o portfólio de Matheus Sousa dos Santos — Conceito, desenvolvimento, funcionalidades e aspectos técnicos.">
+    <title>Sobre o Portfólio — Matheus Sousa dos Santos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <header>
-        <nav>
-            <img src="{{ url_for('static', filename='images/M.png') }}" alt="Logo" class="nav-logo">
-            <div class="cntr-nav">
-                <a href="{{ url_for('home') }}">Início</a>
-                <a href="{{ url_for('sobre') }}">Sobre Mim</a>
-                <a href="{{ url_for('projetos') }}">Projetos</a>
+
+    
+    <!-- 1. Cinematic Preloader -->
+    <div id="preloader">
+        <span id="loader-count">0%</span>
+    </div>
+
+    <!-- 2. Page Transition Layer -->
+    <div class="page-transition-layer"></div>
+
+    <div class="cursor-follower" id="cursor-follower"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="nav-logo">
+                <img src="{{ url_for('static', filename='images/M.png') }}" alt="Logo">
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link">Início</a>
+                <a href="{{ url_for('sobre') }}" class="nav-link">Sobre Mim</a>
+                <a href="{{ url_for('projetos') }}" class="nav-link active">Projetos</a>
             </div>
-            <i class="ri-menu-fill"></i>
-        </nav>
-    </header>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="{{ url_for('home') }}">Início</a>
+        <a href="{{ url_for('sobre') }}">Sobre Mim</a>
+        <a href="{{ url_for('projetos') }}">Projetos</a>
+    </div>
+
     <main>
-        <div class="one">
-            <h1>Sobre o Portfólio</h1>
-        </div>
-        <div class="text">
-            <h2>Conceito e Desenvolvimento</h2>
-            <p>O portfólio foi criado com o objetivo de ser uma vitrine interativa e dinâmica para demonstrar minhas habilidades e experiências em desenvolvimento web. O design foi cuidadosamente elaborado para ser intuitivo e visualmente atraente, utilizando HTML, CSS, JavaScript e o framework Flask. O projeto nasceu da necessidade de ter uma plataforma pessoal onde pudesse compartilhar não apenas meus projetos, mas também minhas reflexões e aprendizados ao longo da minha carreira.</p>
+        <!-- Page Hero -->
+        <section class="page-hero">
+            <h1 class="text-display clip-reveal">Sobre o<br><span>Portfólio</span></h1>
+            <p class="text-eyebrow scroll-reveal">Conceito, desenvolvimento e detalhes técnicos</p>
+        </section>
 
-            <p>O design do portfólio reflete uma estética moderna e minimalista, com uma paleta de cores neutras que proporciona um visual sofisticado. As seções do site são organizadas de forma a permitir uma navegação intuitiva, facilitando a visualização das informações mais importantes. As animações e transições adicionadas melhoram a experiência do usuário, tornando a interação mais fluida e envolvente.</p>
+        <!-- Portfolio Detail -->
+        <section class="portfolio-detail" style="padding-bottom: 10rem;">
+            <div class="text">
+                <div class="content-block scroll-reveal stagger-1 text-reveal">
+                    <h2>Conceito e Desenvolvimento</h2>
+                    <p><span class="line">O portfólio foi criado com o objetivo de ser uma vitrine interativa e dinâmica para demonstrar minhas habilidades e experiências em desenvolvimento web.</span>
+                    <span class="line">O design foi cuidadosamente elaborado para ser intuitivo e visualmente atraente, utilizando HTML, CSS, JavaScript e o framework Flask.</span>
+                    <span class="line">O projeto nasceu da necessidade de ter uma plataforma pessoal onde pudesse compartilhar não apenas meus projetos, mas também minhas reflexões e aprendizados ao longo da minha carreira.</span></p>
 
-            <p>Para garantir a responsividade, o site foi desenvolvido com técnicas avançadas de CSS, incluindo Flexbox e Grid. Isso assegura que o layout se adapte perfeitamente a diferentes tamanhos de tela, proporcionando uma experiência consistente em dispositivos móveis e desktops. Além disso, o uso de media queries permite ajustes específicos para garantir que todos os elementos sejam exibidos de maneira otimizada em qualquer dispositivo.</p>
+                    <p style="margin-top: 1rem;"><span class="line">O design do portfólio reflete uma estética moderna e premium, com uma paleta de cores "High Impact" que proporciona um visual sofisticado.</span>
+                    <span class="line">As seções do site são organizadas de forma a permitir uma navegação intuitiva, facilitando a visualização das informações mais importantes.</span>
+                    <span class="line">As animações e transições adicionadas melhoram a experiência do usuário, tornando a interação mais fluida e envolvente.</span></p>
 
-            <h2>Funcionalidades Principais</h2>
-            <p>O portfólio conta com diversas funcionalidades, como uma página inicial dinâmica que destaca os projetos mais recentes e importantes. Cada projeto possui uma página dedicada com descrições detalhadas e imagens, permitindo uma apresentação completa do trabalho realizado. A seção "Sobre Mim" oferece uma visão geral da minha trajetória profissional, incluindo habilidades e conquistas relevantes.</p>
+                    <p style="margin-top: 1rem;"><span class="line">Para garantir a responsividade, o site foi desenvolvido com técnicas avançadas de CSS, incluindo Flexbox e Grid. Isso assegura que o layout</span>
+                    <span class="line">se adapte perfeitamente a diferentes tamanhos de tela, proporcionando uma experiência consistente em dispositivos móveis e desktops.</span>
+                    <span class="line">Além disso, o uso de media queries permite ajustes específicos para garantir que todos os elementos sejam exibidos de maneira otimizada em qualquer dispositivo.</span></p>
+                </div>
 
-            <p>O formulário de contato integrado facilita a comunicação direta, permitindo que visitantes entrem em contato comigo de maneira rápida e eficiente. A integração com o Flask possibilita a manipulação de dados em tempo real, garantindo que as mensagens enviadas sejam recebidas e processadas corretamente.</p>
+                <div class="content-block scroll-reveal stagger-2 text-reveal">
+                    <h2>Funcionalidades Principais</h2>
+                    <p><span class="line">O portfólio conta com diversas funcionalidades, como uma página inicial dinâmica que destaca os projetos mais recentes e importantes. Cada projeto</span>
+                    <span class="line">possui uma página dedicada com descrições detalhadas e imagens, permitindo uma apresentação completa do trabalho realizado. A seção "Sobre Mim"</span>
+                    <span class="line">oferece uma visão geral da minha trajetória profissional, incluindo habilidades e conquistas relevantes.</span></p>
 
-            <p>A seção de projetos é organizada de forma a apresentar cada item de maneira clara e atraente. As descrições dos projetos são acompanhadas por imagens e detalhes técnicos, proporcionando uma visão completa das soluções desenvolvidas. Além disso, o uso de animações e efeitos visuais melhora a apresentação e torna a navegação mais envolvente.</p>
+                    <p style="margin-top: 1rem;"><span class="line">A integração com o Flask possibilita a construção de rotas dinâmicas, mantendo o código back-end enxuto, rápido e de simples manutenção.</span>
+                    <span class="line">Esse poder permite fácil escalabilidade quando for preciso conectar a um banco de dados de currículos ou de leads de clientes.</span></p>
 
-            <h2>Desafios e Soluções</h2>
-            <p>Um dos maiores desafios foi criar um design responsivo que funcionasse perfeitamente em todos os dispositivos, desde desktops até smartphones. Para resolver isso, utilizei técnicas avançadas de CSS Flexbox e Grid, garantindo que todos os elementos se ajustassem de forma elegante e proporcional. A integração com o Flask permitiu a criação de uma aplicação web rápida e segura, capaz de lidar com dados em tempo real de maneira eficiente.</p>
+                    <p style="margin-top: 1rem;"><span class="line">A seção de projetos é organizada de forma a apresentar cada item de maneira clara e atraente. As descrições dos projetos são acompanhadas por</span>
+                    <span class="line">detalhes técnicos, proporcionando uma visão completa das soluções desenvolvidas. Além disso, o uso de animações modernas como tipografia fluida,</span>
+                    <span class="line">efeitos de clip-path e cursor magnético aumentam o engajamento na navegação.</span></p>
+                </div>
 
-            <p>Outro desafio significativo foi a implementação de animações e transições suaves, que exigiu um ajuste cuidadoso para garantir que não comprometessem o desempenho do site. Utilizei técnicas de otimização para assegurar que as animações fossem leves e não afetassem negativamente a experiência do usuário.</p>
+                <div class="content-block scroll-reveal stagger-3 text-reveal">
+                    <h2>Desafios e Soluções</h2>
+                    <p><span class="line">Um dos maiores desafios foi criar um design altamente performático que funcionasse perfeitamente em todos os dispositivos sem perder o impacto visual.</span>
+                    <span class="line">Para resolver isso, utilizei uma abordagem centrada em "clamp" CSS, permitindo a transição responsiva suave e garantindo que todos os elementos se ajustassem.</span>
+                    <span class="line">A integração com o Flask permitiu a criação de uma aplicação web rápida e segura.</span></p>
 
-            <p>Além disso, a integração do formulário de contato com o backend foi um desafio técnico que envolveu a configuração de rotas e o gerenciamento de dados. A solução envolveu a criação de uma API simples que permite o envio e o recebimento de mensagens de forma segura e eficiente.</p>
+                    <p style="margin-top: 1rem;"><span class="line">Outro desafio significativo foi a implementação de animações e transições suaves, que exigiu um ajuste cuidadoso de timings e funções cubic-bezier,</span>
+                    <span class="line">para garantir que não comprometessem o desempenho do site. Utilizei "IntersectionObserver" para assegurar que as animações fossem carregadas no</span>
+                    <span class="line">momento exato do viewport, mantendo altas taxas de frame.</span></p>
+                </div>
 
-            <h2>Objetivos Futuros</h2>
-            <p>O portfólio continua sendo um projeto em evolução, com planos futuros para adicionar novas funcionalidades, como um blog para compartilhar insights técnicos, uma seção de depoimentos de clientes e colegas, e a integração com APIs para demonstrar habilidades em desenvolvimento full stack. Meu objetivo é continuar aprimorando este espaço para que ele sirva como uma demonstração viva do meu crescimento e adaptabilidade na área de tecnologia.</p>
+                <div class="content-block scroll-reveal stagger-4 text-reveal">
+                    <h2>Objetivos Futuros</h2>
+                    <p><span class="line">O portfólio continua sendo um projeto em evolução, com planos futuros para adicionar novas funcionalidades, como um CMS para fácil postagem de</span>
+                    <span class="line">projetos técnicos, uma seção de depoimentos de clientes e colegas, e a integração com APIs para demonstrar habilidades em desenvolvimento full stack.</span>
+                    <span class="line">Meu objetivo é continuar aprimorando este espaço para que ele sirva como uma demonstração viva do meu crescimento tecnológico.</span></p>
 
-            <p>Entre as melhorias planejadas estão a implementação de um sistema de comentários e avaliações para os projetos, o que permitirá um feedback mais interativo dos visitantes. Além disso, pretendo adicionar seções específicas para novas tecnologias e habilidades adquiridas, garantindo que o portfólio reflita as últimas tendências e avanços na área de desenvolvimento web.</p>
+                    <p style="margin-top: 1rem;"><span class="line">Outro objetivo é expandir a presença online do portfólio através de estratégias de SEO e acessibilidade. Isso incluirá a otimização de conteúdo</span>
+                    <span class="line">e a melhora das hierarquias semânticas. A longo prazo, o portfólio servirá como uma plataforma para não apenas mostrar trabalhos realizados,</span>
+                    <span class="line">mas também para compartilhar conhecimentos e contribuir para a comunidade de desenvolvimento web.</span></p>
+                </div>
 
-            <p>Outro objetivo é expandir a presença online do portfólio através de estratégias de SEO e marketing digital. Isso incluirá a otimização de conteúdo e a criação de campanhas para atrair mais visitantes e potenciais clientes. A longo prazo, o portfólio servirá como uma plataforma para não apenas mostrar trabalhos realizados, mas também para compartilhar conhecimentos e contribuir para a comunidade de desenvolvimento web.</p>
+                <div class="content-block scroll-reveal stagger-5 text-reveal">
+                    <h2>Descrição das Cores</h2>
+                    <p><span class="line"><strong>1. Near-Black (#0A0A0F):</strong> Esta cor é utilizada como fundo principal do site, proporcionando uma base muito escura e cinematográfica. O fundo escuro confere</span>
+                    <span class="line">um aspecto de alto contraste e foco no conteúdo, permitindo que a paleta de cores fortes vibre intensamente.</span></p>
 
-            <h2>Descrição das Cores</h2>
-            <p><strong>1. Cinza Claro (#F2F2F2):</strong> Esta cor é utilizada como fundo principal do site, proporcionando uma base neutra e clara. O cinza claro confere um aspecto moderno e sofisticado, permitindo que os elementos do design se destaquem de forma elegante. Sua escolha visa criar um ambiente visualmente agradável, onde o conteúdo se torna o foco principal.</p>
+                    <p style="margin-top: 1rem;"><span class="line"><strong>2. Lime/Neon Green (#D2FF00):</strong> Usado como destaque absoluto do design, este tom cítrico evoca energia, modernidade e tecnologia de ponta.</span>
+                    <span class="line">É usado para dar "punch" em títulos de impacto, botões primários e interações de hover, como os limites animados do cartão e das fotos.</span></p>
 
-            <p><strong>2. Cinza Escuro (#E0E0E0):</strong> Usado para gradientes e fundos secundários, o cinza escuro adiciona profundidade e contraste ao design. Ele cria uma separação visual que ajuda a destacar diferentes seções do site sem sobrecarregar o usuário. A cor também é aplicada em áreas que precisam de uma leve distinção do fundo principal, mantendo a harmonia geral do design.</p>
+                    <p style="margin-top: 1rem;"><span class="line"><strong>3. White (#F5F5F5):</strong> Utilizado para a maior parte do texto "display", o branco ligeiramente suavizado garante excelente legibilidade.</span>
+                    <span class="line">É uma cor poderosa e contrastante em relação ao fundo imersivo, ideal para garantir que os cabeçalhos das seções não passem despercebidos.</span></p>
 
-            <p><strong>3. Preto (#0D0C0D):</strong> Utilizado para o texto e elementos de destaque, o preto oferece um contraste forte e legível em relação ao fundo mais claro. É uma cor poderosa e sofisticada, ideal para garantir que as informações importantes se destaquem. O preto também é usado em elementos interativos, como botões e links, para proporcionar uma experiência de navegação intuitiva e clara.</p>
+                    <p style="margin-top: 1rem;"><span class="line"><strong>4. Greys (#999, #555, #333):</strong> Uma variação de cinzas para criar hierarquia visual entre textos descritivos, bordas sutis e os metadados do site.</span></p>
+                </div>
 
-            <p><strong>4. Azul Escuro (#A69E94):</strong> Aplicado em links e botões, o azul escuro é usado para criar elementos interativos que atraem a atenção do usuário. Ele adiciona um toque de cor que é ao mesmo tempo elegante e atraente, proporcionando um contraste agradável com o fundo neutro. O azul escuro é escolhido por sua capacidade de transmitir confiança e profissionalismo.</p>
+                <div class="content-block scroll-reveal stagger-6 text-reveal">
+                    <h2>Aspectos Técnicos e de Implementação</h2>
+                    <p><span class="line">O desenvolvimento técnico do portfólio envolveu uma estrutura totalmente desacoplada no lado do cliente com forte uso de Variáveis CSS Globais (Custom Properties),</span>
+                    <span class="line">eliminando o excesso de classes desnecessárias. O uso do Flask permitiu um boilerplate muito rápido e rotas escaláveis que poderão abrigar lógica complexa,</span>
+                    <span class="line">como envio de e-mails via SendGrid ou integração de dados.</span></p>
 
-            <p><strong>5. Cinza Médio (#D3D3D3):</strong> Utilizado em seções intermediárias e para adicionar variação ao fundo, o cinza médio oferece um equilíbrio visual entre o cinza claro e o cinza escuro. Ele ajuda a dividir o conteúdo de forma clara e organizada, evitando que o design se torne monótono. A cor é ideal para criar uma hierarquia visual sem comprometer a estética geral.</p>
-
-            <p><strong>6. Bege (#A69E94):</strong> Adiciona um toque de sofisticação e calor ao design. Usado principalmente em gradientes e destaques, o bege proporciona um contraste sutil e elegante com as cores mais frias, como o cinza e o preto. Ele é escolhido por sua capacidade de criar uma sensação de acolhimento e refinamento, enriquecendo a paleta de cores do portfólio.</p>
-
-            <h2>Aspectos Técnicos e de Implementação</h2>
-            <p>O desenvolvimento técnico do portfólio envolveu a integração de várias tecnologias e ferramentas para garantir uma experiência de usuário de alta qualidade. O uso do Flask permitiu a criação de uma aplicação web robusta e flexível, capaz de lidar com diferentes aspectos da funcionalidade do site. O Flask foi escolhido devido à sua simplicidade e eficiência na criação de aplicações web, permitindo uma integração perfeita com o frontend.</p>
-
-            <p>A estrutura do código foi organizada para facilitar a manutenção e a escalabilidade do projeto. Utilizei princípios de desenvolvimento ágil para garantir que o projeto pudesse ser facilmente adaptado e melhorado ao longo do tempo. A documentação detalhada foi criada para ajudar na compreensão do código e nas futuras atualizações.</p>
-
-            <p>Para garantir a segurança do site, foram implementadas medidas de proteção contra vulnerabilidades comuns, como ataques de injeção e XSS (Cross-Site Scripting). Além disso, a integração com APIs externas foi realizada com cuidado para garantir a privacidade e a segurança dos dados dos usuários.</p>
-
-            <h2>Feedback e Melhorias Contínuas</h2>
-            <p>Recebi feedback valioso de colegas e profissionais da área durante o desenvolvimento do portfólio. Esse feedback ajudou a identificar áreas de melhoria e a ajustar aspectos do design e da funcionalidade. Estou comprometido em continuar recebendo feedback e realizando melhorias contínuas para garantir que o portfólio permaneça relevante e eficaz.</p>
-
-            <p>As futuras atualizações incluirão a implementação de novas funcionalidades com base nas sugestões recebidas e nas tendências emergentes no desenvolvimento web. O objetivo é manter o portfólio atualizado e alinhado com as melhores práticas e tecnologias da indústria.</p>
-
-            <p>Além disso, planejo realizar testes regulares de usabilidade e desempenho para identificar possíveis áreas de melhoria. Esses testes ajudarão a garantir que o site continue oferecendo uma experiência de usuário de alta qualidade e que todos os aspectos técnicos estejam funcionando conforme o esperado.</p>
-
-            <p>Em resumo, o portfólio é um reflexo do meu crescimento e evolução na área de desenvolvimento web. É uma plataforma que não só exibe meus projetos e habilidades, mas também serve como uma ferramenta de aprendizado e desenvolvimento contínuo. Estou animado para ver como o projeto continuará a evoluir e a impactar minha carreira e a comunidade de tecnologia.</p>
-
-            <p>Obrigado por visitar meu portfólio e por se interessar pelo meu trabalho. Estou sempre aberto a novas oportunidades e colaborações, e estou ansioso para conectar-me com profissionais e empresas que compartilhem meu entusiasmo pela tecnologia e inovação.</p>
-
-            <p>Se tiver alguma dúvida ou feedback, sinta-se à vontade para entrar em contato através da seção de contato. Sua opinião é importante e contribuirá para o aprimoramento contínuo deste portfólio e de minhas habilidades como desenvolvedor.</p>
-
-            
-        </div>
-    </main>
-    <footer>
-        <div class="container">
-            <div class="social-links">
-                <a href="https://www.instagram.com/taiwan.sz/" target="_blank" rel="noopener noreferrer">Instagram</a>
-                <a href="https://github.com/Taiwansz" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a href="https://www.linkedin.com/in/mth3us" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <p style="margin-top: 1rem;"><span class="line">A estrutura do código foi organizada modularmente na pasta "static" (com scripts e estilos unificados) e "templates" para os views do Flask.</span>
+                    <span class="line">Utilizei princípios modernos de JavaScript Vanilla, substituindo bibliotecas de animação pesadas por lógicas de 'requestAnimationFrame', IntersectionObservers e</span>
+                    <span class="line">Math.lerp para lidar nativamente com a interatividade, o que gerou um salto qualitativo gigantesco na renderização (60fps constantes).</span></p>
+                </div>
             </div>
+        </section>
+    </main>
+
+    <!-- Big CTA Footer -->
+    <section class="big-cta scroll-reveal">
+        <div class="big-cta-bg"></div>
+        <h2 class="big-cta-text">VAMOS<br>CONVERSAR</h2>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='images/M.png') }}" alt="Logo" style="width: 40px; border-radius: 50%;">
+                Matheus Sousa
+            </div>
+            <div class="social-links">
+                <a href="https://www.instagram.com/taiwan.sz/" target="_blank" rel="noopener noreferrer" class="social-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                    Instagram
+                </a>
+                <a href="https://github.com/Taiwansz" target="_blank" rel="noopener noreferrer" class="social-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/mth3us" target="_blank" rel="noopener noreferrer" class="social-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                    LinkedIn
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Matheus Sousa dos Santos. Todos os direitos reservados.</p>
         </div>
     </footer>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniFlow AI Orchestrator</title>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --grid: rgba(255, 255, 255, 0.05);
+            --node-bg: rgba(20, 20, 25, 0.7);
+            --node-border: rgba(255, 255, 255, 0.1);
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-in: #3b82f6;
+            --accent-llm: #a855f7;
+            --accent-out: #4ade80;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg); color: var(--text);
+            user-select: none;
+        }
+        input, textarea { user-select: auto; }
+
+        .toolbar {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 15, 20, 0.85); backdrop-filter: blur(16px);
+            padding: 10px 16px; border-radius: 16px; border: 1px solid var(--node-border);
+            display: flex; gap: 8px; align-items: center; z-index: 100;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        .btn {
+            background: rgba(255, 255, 255, 0.03); color: var(--text);
+            border: 1px solid transparent; padding: 8px 16px; border-radius: 10px;
+            cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s ease;
+            text-decoration: none; display: flex; align-items: center;
+        }
+        .btn:hover { background: rgba(255, 255, 255, 0.08); transform: translateY(-1px); }
+        .btn:active { transform: translateY(1px); }
+        .btn.save-btn {
+            background: rgba(74, 222, 128, 0.15); border-color: rgba(74, 222, 128, 0.3);
+            color: var(--accent-out);
+        }
+        .btn.save-btn:hover { background: rgba(74, 222, 128, 0.25); }
+        .divider { width: 1px; height: 24px; background: var(--node-border); margin: 0 8px; }
+
+        #canvas-container {
+            width: 100%; height: 100%; position: relative;
+            background-image: radial-gradient(circle, var(--grid) 1px, transparent 1px);
+            background-size: 24px 24px; cursor: default;
+        }
+        #workspace {
+            position: absolute; top: 0; left: 0; width: 0; height: 0;
+            overflow: visible; transform-origin: 0 0;
+        }
+        #connections-svg {
+            position: absolute; top: 0; left: 0; width: 1px; height: 1px;
+            overflow: visible; pointer-events: none; z-index: 1;
+        }
+        #nodes-container {
+            position: absolute; top: 0; left: 0; width: 0; height: 0;
+            overflow: visible; z-index: 2;
+        }
+
+        .node {
+            position: absolute; width: 260px;
+            background: var(--node-bg); backdrop-filter: blur(20px);
+            border: 1px solid var(--node-border); border-radius: 14px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+            display: flex; flex-direction: column; transition: box-shadow 0.3s;
+        }
+        .node[data-type="Input"] { border-top: 4px solid var(--accent-in); }
+        .node[data-type="LLM"] { border-top: 4px solid var(--accent-llm); }
+        .node[data-type="Output"] { border-top: 4px solid var(--accent-out); }
+        
+        .node:hover { box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6); z-index: 10; }
+
+        .node-header {
+            padding: 12px 16px; border-bottom: 1px solid var(--node-border);
+            font-size: 14px; font-weight: 600; cursor: grab;
+            background: rgba(255, 255, 255, 0.02); border-radius: 10px 10px 0 0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .node-header:active { cursor: grabbing; }
+        .node-content { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+        
+        .node-label { font-size: 12px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .node-input, .node-textarea {
+            width: 100%; box-sizing: border-box; background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;
+            color: #fff; padding: 10px; font-family: inherit; font-size: 13px;
+            transition: all 0.2s; outline: none;
+        }
+        .node-input:focus, .node-textarea:focus { border-color: rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.6); }
+        .node-textarea { resize: vertical; min-height: 80px; line-height: 1.4; }
+
+        .port {
+            width: 14px; height: 14px; border-radius: 50%; position: absolute;
+            cursor: crosshair; border: 3px solid var(--bg); background: #888;
+            transition: transform 0.2s, background 0.2s; z-index: 20;
+        }
+        .port:hover { transform: scale(1.4); }
+        .port-in { left: -8px; top: 50%; transform: translateY(-50%); }
+        .port-out { right: -8px; top: 50%; transform: translateY(-50%); }
+        .node[data-type="Input"] .port { background: var(--accent-in); }
+        .node[data-type="LLM"] .port { background: var(--accent-llm); }
+        .node[data-type="Output"] .port { background: var(--accent-out); }
+
+        .delete-btn {
+            background: none; border: none; color: var(--text-muted);
+            cursor: pointer; font-size: 18px; line-height: 1; padding: 4px;
+            margin: -4px; border-radius: 6px; transition: all 0.2s;
+        }
+        .delete-btn:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+
+        path.connection {
+            fill: none; stroke: var(--text-muted); stroke-width: 3;
+            transition: stroke 0.3s, stroke-width 0.3s; pointer-events: auto;
+        }
+        path.connection:hover {
+            stroke: #ef4444; stroke-width: 5; cursor: pointer;
+        }
+        path.temp-connection {
+            fill: none; stroke: var(--text-muted); stroke-width: 3; stroke-dasharray: 6 6;
+            animation: dash 1s linear infinite;
+        }
+        @keyframes dash { to { stroke-dashoffset: -12; } }
+    
+        /* PHASE 2 CSS */
+        .properties-panel {
+            position: absolute; right: -350px; top: 0; width: 320px; height: 100%;
+            background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(24px);
+            border-left: 1px solid var(--node-border); box-shadow: -10px 0 40px rgba(0,0,0,0.5);
+            transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 200;
+            padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px;
+            color: #fff; font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        .properties-panel.open { right: 0; }
+        .props-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--node-border); padding-bottom: 12px; margin-bottom: 8px; }
+        .props-title { font-size: 16px; font-weight: 600; letter-spacing: 0.5px; }
+        .props-close { background: none; border: none; color: #94a3b8; font-size: 20px; cursor: pointer; }
+        .props-close:hover { color: #fff; }
+        .prop-group { display: flex; flex-direction: column; gap: 6px; }
+        .prop-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; }
+        .prop-input, .prop-select, .prop-textarea {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: #fff; padding: 10px; border-radius: 8px; font-size: 13px; outline: none; transition: border 0.2s;
+            width: 100%; box-sizing: border-box;
+        }
+        .prop-input:focus, .prop-select:focus, .prop-textarea:focus { border-color: var(--accent-in); }
+        .prop-textarea { min-height: 120px; resize: vertical; }
+        .prop-slider-wrapper { display: flex; align-items: center; gap: 12px; }
+        .prop-slider { flex: 1; }
+        
+        .node.selected { border-color: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,0.2), 0 12px 32px rgba(0,0,0,0.5); }
+        
+        /* Simulation Animations */
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0px rgba(210, 255, 0, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(210, 255, 0, 0); }
+            100% { box-shadow: 0 0 0 0px rgba(210, 255, 0, 0); }
+        }
+        .node.executing {
+            border-color: #d2ff00;
+            animation: pulseGlow 1.5s infinite;
+        }
+        .node.executing .node-header { background: rgba(210, 255, 0, 0.1); color: #d2ff00; }
+        .node.finished { border-color: #4ade80; }
+        
+        path.connection.executing {
+            stroke: #d2ff00;
+            stroke-width: 4;
+            stroke-dasharray: 10 10;
+            animation: flowDash 0.5s linear infinite;
+        }
+        @keyframes flowDash { to { stroke-dashoffset: -20; } }
+        
+        .sim-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center;
+            z-index: 50; pointer-events: none; backdrop-filter: blur(2px); transition: opacity 0.5s; opacity: 0;
+        }
+        .sim-overlay.active { display: flex; opacity: 1; }
+        .sim-text { font-size: 32px; font-weight: 700; color: #d2ff00; letter-spacing: 2px; text-shadow: 0 0 20px rgba(210,255,0,0.5); }
+
+    
+        /* GOD-TIER ENGINE CSS */
+        body.focus-mode #canvas-container {
+            background-color: #050508;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+        }
+        body.focus-mode .node:not(.active-node):not(.finished) {
+            opacity: 0.15; filter: grayscale(100%);
+        }
+        body.focus-mode path.connection:not(.executing) {
+            opacity: 0.1;
+        }
+        
+        .execution-console {
+            position: absolute; bottom: -300px; left: 50%; transform: translateX(-50%);
+            width: 80%; max-width: 900px; height: 250px;
+            background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(24px);
+            border: 1px solid var(--node-border); border-top-left-radius: 16px; border-top-right-radius: 16px;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+            transition: bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1); z-index: 300;
+            display: flex; flex-direction: column; overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .execution-console.open { bottom: 0; }
+        .console-header {
+            background: rgba(255,255,255,0.05); padding: 8px 16px; border-bottom: 1px solid var(--node-border);
+            display: flex; justify-content: space-between; align-items: center; color: #94a3b8; font-size: 12px; font-family: 'Segoe UI', system-ui, sans-serif; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .console-body {
+            padding: 16px; overflow-y: auto; flex: 1; color: #a8cc00; font-size: 13px; line-height: 1.6;
+            text-shadow: 0 0 5px rgba(168,204,0,0.4);
+        }
+        .console-line { margin-bottom: 4px; opacity: 0; animation: fadeInLog 0.2s forwards; }
+        .console-line .timestamp { color: #555; margin-right: 8px; }
+        .console-line .prefix { color: #fff; font-weight: bold; margin-right: 8px; }
+        @keyframes fadeInLog { to { opacity: 1; } }
+        
+        .node.active-node {
+            border-color: #d2ff00;
+            box-shadow: 0 0 30px rgba(210, 255, 0, 0.3), inset 0 0 20px rgba(210, 255, 0, 0.1);
+            transform: scale(1.02); transition: all 0.3s;
+        }
+        
+        .node-progress-container {
+            margin-top: 12px; width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;
+        }
+        .node-progress-bar {
+            height: 100%; width: 0%; background: #d2ff00; transition: width 0.1s linear;
+        }
+        .node-status-text {
+            font-size: 10px; color: #d2ff00; text-transform: uppercase; margin-top: 4px; letter-spacing: 0.5px;
+        }
+        
+        /* Particle Orb SVG */
+        .data-orb {
+            fill: #d2ff00;
+            filter: drop-shadow(0 0 8px #d2ff00);
+            offset-path: var(--path-data);
+            animation: orbTravel var(--travel-time) linear forwards;
+            opacity: 0;
+        }
+        @keyframes orbTravel {
+            0% { offset-distance: 0%; opacity: 1; }
+            90% { opacity: 1; }
+            100% { offset-distance: 100%; opacity: 0; }
+        }
+
+    
+        .feature-icon-svg {
+            display: block;
+            margin-bottom: 1.5rem;
+            color: inherit;
+        }
+        /* Fallback colors if not handled by parent */
+        .feature-card .feature-icon-svg { color: var(--lime, var(--primary-color, inherit)); }
+
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <a href="{{ url_for('projetos') }}" class="btn back-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Back
+        </a>
+        <div class="divider"></div>
+        <button class="btn add-btn" onclick="addNode('Input')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+            Input
+        </button>
+        <button class="btn add-btn" onclick="addNode('LLM')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>
+            LLM
+        </button>
+        <button class="btn add-btn" onclick="addNode('Output')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            Output
+        </button>
+        <div class="divider"></div>
+        <select id="template-select" onchange="loadSelectedTemplate()" style="background: rgba(0,0,0,0.5); color: #fff; border: 1px solid var(--node-border); border-radius: 8px; padding: 6px 12px; font-size: 13px; outline: none; cursor: pointer;">
+            <option value="">Templates</option>
+        </select>
+        <div class="divider"></div>
+        
+        <button class="btn save-btn" onclick="runSimulation()" style="background: rgba(210,255,0,0.15); border-color: rgba(210,255,0,0.3); color: #d2ff00;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 6px;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            Run Simulation
+        </button>
+        <div class="divider"></div>
+
+        <button class="btn save-btn" onclick="saveWorkflow()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            Save Workflow
+        </button>
+    </div>
+
+    
+    <div id="properties-panel" class="properties-panel">
+        <div class="props-header">
+            <span class="props-title">Properties</span>
+            <button class="props-close" onclick="closeProperties()">&times;</button>
+        </div>
+        <div id="props-content">
+            <p style="color: #555; font-size: 13px;">Select a node to edit its properties.</p>
+        </div>
+    </div>
+    
+    <div class="sim-overlay" id="sim-overlay">
+        <div class="sim-text">EXECUTING WORKFLOW...</div>
+    </div>
+
+    <div id="canvas-container">
+        <div id="workspace">
+            <svg id="connections-svg"></svg>
+            <div id="nodes-container"></div>
+        </div>
+    </div>
+
+
+    <!-- GOD-TIER CONSOLE -->
+    <div id="execution-console" class="execution-console">
+        <div class="console-header">
+            <span>Terminal // Execution Engine</span>
+            <span style="color: #d2ff00; display: flex; align-items: center; gap: 6px;">
+                <div style="width:6px;height:6px;border-radius:50%;background:#d2ff00;box-shadow:0 0 8px #d2ff00;animation: pulse 1s infinite;"></div>
+                SYSTEM ONLINE
+            </span>
+        </div>
+        <div class="console-body" id="console-body"></div>
+    </div>
+
+    <script>
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            alert('JS Error: ' + msg + '\nLine: ' + lineNo);
+            return false;
+        };
+        
+        
+
+        const state = {
+            nodes: {},
+            connections: [],
+            pan: { x: 0, y: 0 },
+            connecting: {
+                active: false,
+                sourceNode: null,
+                sourceType: null,
+                mouseX: 0,
+                mouseY: 0
+            }
+        };
+
+        // --- PHASE 2 JAVASCRIPT ---
+        state.selectedNode = null;
+
+        function selectNode(id) {
+            document.querySelectorAll('.node').forEach(el => el.classList.remove('selected'));
+            if (id && state.nodes[id]) {
+                state.selectedNode = id;
+                const el = document.querySelector(`.node[data-id="${id}"]`);
+                if (el) el.classList.add('selected');
+                openProperties(id);
+            } else {
+                state.selectedNode = null;
+                closeProperties();
+            }
+        }
+
+        function openProperties(id) {
+            const node = state.nodes[id];
+            const panel = document.getElementById('properties-panel');
+            const content = document.getElementById('props-content');
+            
+            let html = '';
+            if (node.type === 'LLM') {
+                html = `
+                    <div class="prop-group">
+                        <label class="prop-label">Model</label>
+                        <select class="prop-select" onchange="updateNodeData('${id}', 'model', this.value)">
+                            <option value="gpt-4o" ${node.data.model === 'gpt-4o' ? 'selected' : ''}>GPT-4o (OpenAI)</option>
+                            <option value="claude-3-opus" ${node.data.model === 'claude-3-opus' ? 'selected' : ''}>Claude 3 Opus (Anthropic)</option>
+                            <option value="gemini-1.5-pro" ${node.data.model === 'gemini-1.5-pro' ? 'selected' : ''}>Gemini 1.5 Pro (Google)</option>
+                            <option value="llama-3" ${node.data.model === 'llama-3' ? 'selected' : ''}>Llama 3 70B (Meta)</option>
+                        </select>
+                    </div>
+                    <div class="prop-group">
+                        <label class="prop-label">System Prompt</label>
+                        <textarea class="prop-textarea" oninput="updateNodeData('${id}', 'prompt', this.value)">${node.data.prompt || ''}</textarea>
+                    </div>
+                    <div class="prop-group">
+                        <label class="prop-label">Temperature: <span id="temp-val-${id}">${node.data.temperature || 0.7}</span></label>
+                        <div class="prop-slider-wrapper">
+                            <input type="range" class="prop-slider" min="0" max="2" step="0.1" value="${node.data.temperature || 0.7}" 
+                                oninput="document.getElementById('temp-val-${id}').innerText=this.value; updateNodeData('${id}', 'temperature', this.value)">
+                        </div>
+                    </div>
+                    <div class="prop-group">
+                        <label class="prop-label">Max Tokens</label>
+                        <input type="number" class="prop-input" value="${node.data.maxTokens || 2048}" oninput="updateNodeData('${id}', 'maxTokens', this.value)">
+                    </div>
+                `;
+            } else if (node.type === 'Input') {
+                html = `
+                    <div class="prop-group">
+                        <label class="prop-label">Variable Name</label>
+                        <input type="text" class="prop-input" value="${node.data.varName || ''}" oninput="updateNodeData('${id}', 'varName', this.value)">
+                    </div>
+                    <div class="prop-group">
+                        <label class="prop-label">Mock Value (For Testing)</label>
+                        <textarea class="prop-textarea" oninput="updateNodeData('${id}', 'mockValue', this.value)">${node.data.mockValue || ''}</textarea>
+                    </div>
+                `;
+            } else if (node.type === 'Output') {
+                html = `
+                    <div class="prop-group">
+                        <label class="prop-label">Output Format</label>
+                        <select class="prop-select" onchange="updateNodeData('${id}', 'format', this.value)">
+                            <option value="JSON" ${node.data.format === 'JSON' ? 'selected' : ''}>JSON Object</option>
+                            <option value="Markdown" ${node.data.format === 'Markdown' ? 'selected' : ''}>Markdown Document</option>
+                            <option value="Raw Text" ${node.data.format === 'Raw Text' ? 'selected' : ''}>Raw Text</option>
+                        </select>
+                    </div>
+                    <div class="prop-group">
+                        <label class="prop-label">Webhook URL (Optional)</label>
+                        <input type="text" class="prop-input" placeholder="https://api.example.com/webhook" value="${node.data.webhook || ''}" oninput="updateNodeData('${id}', 'webhook', this.value)">
+                    </div>
+                `;
+            }
+            
+            content.innerHTML = html;
+            panel.classList.add('open');
+        }
+
+        function closeProperties() {
+            document.getElementById('properties-panel').classList.remove('open');
+            state.selectedNode = null;
+            document.querySelectorAll('.node').forEach(el => el.classList.remove('selected'));
+        }
+
+        function updateNodeData(id, key, value) {
+            if (state.nodes[id]) {
+                state.nodes[id].data[key] = value;
+                // If the key is 'prompt' or 'varName', we should sync it with the canvas mini-inputs if they exist
+                const nodeEl = document.querySelector(`.node[data-id="${id}"]`);
+                if (nodeEl) {
+                    const inputs = nodeEl.querySelectorAll('input, textarea');
+                    inputs.forEach(inp => {
+                        if (inp.tagName === 'INPUT' && key === 'varName') inp.value = value;
+                        if (inp.tagName === 'TEXTAREA' && key === 'prompt') inp.value = value;
+                    });
+                }
+            }
+        }
+
+        // Add Delete Hotkey
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Delete' || e.key === 'Backspace') {
+                if (state.selectedNode && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                    deleteNode(state.selectedNode);
+                }
+            }
+        });
+
+        
+        // --- GOD-TIER EXECUTION LOGIC ---
+        function logToConsole(prefix, message) {
+            const body = document.getElementById('console-body');
+            const line = document.createElement('div');
+            line.className = 'console-line';
+            const time = new Date().toISOString().split('T')[1].substring(0, 12);
+            line.innerHTML = `<span class="timestamp">[${time}]</span><span class="prefix">[${prefix}]</span>${message}`;
+            body.appendChild(line);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        async function simulateNodeProgress(id, duration, statusText) {
+            const el = document.querySelector(`.node[data-id="${id}"]`);
+            if (!el) return;
+            
+            // Inject progress bar if not exists
+            let progCont = el.querySelector('.node-progress-wrapper');
+            if (!progCont) {
+                const content = el.querySelector('.node-content') || el.querySelector('.node-header');
+                const wrapper = document.createElement('div');
+                wrapper.className = 'node-progress-wrapper';
+                wrapper.innerHTML = `<div class="node-progress-container"><div class="node-progress-bar"></div></div><div class="node-status-text">${statusText}</div>`;
+                content.appendChild(wrapper);
+                progCont = wrapper;
+            } else {
+                progCont.querySelector('.node-status-text').innerText = statusText;
+            }
+            
+            const bar = progCont.querySelector('.node-progress-bar');
+            bar.style.width = '0%';
+            
+            const steps = 20;
+            const stepTime = duration / steps;
+            
+            for (let i = 1; i <= steps; i++) {
+                await new Promise(r => setTimeout(r, stepTime));
+                bar.style.width = `${(i / steps) * 100}%`;
+                // Add tiny random stutter to make it feel like real computing
+                if (Math.random() > 0.8) await new Promise(r => setTimeout(r, 150));
+            }
+            
+            progCont.querySelector('.node-status-text').innerText = "DONE.";
+            setTimeout(() => { if (progCont && progCont.parentNode) progCont.parentNode.removeChild(progCont); }, 1000);
+        }
+
+        async function runSimulation() {
+            if (Object.keys(state.nodes).length === 0) {
+                alert("Canvas is empty.");
+                return;
+            }
+            
+            // Prep UI
+            document.body.classList.add('focus-mode');
+            const consoleEl = document.getElementById('execution-console');
+            const consoleBody = document.getElementById('console-body');
+            consoleBody.innerHTML = '';
+            consoleEl.classList.add('open');
+            
+            logToConsole('SYSTEM', 'Initiating execution sequence...');
+            
+            // Reset states
+            document.querySelectorAll('.node').forEach(el => el.classList.remove('active-node', 'finished'));
+            document.querySelectorAll('.connection').forEach(el => el.classList.remove('executing'));
+            
+            const roots = Object.values(state.nodes).filter(n => n.type === 'Input');
+            if (roots.length === 0) {
+                logToConsole('ERROR', 'No Input nodes found. Aborting.');
+                setTimeout(() => { document.body.classList.remove('focus-mode'); consoleEl.classList.remove('open'); }, 2000);
+                return;
+            }
+            
+            const queue = [...roots];
+            const executed = new Set();
+            
+            while(queue.length > 0) {
+                const current = queue.shift();
+                if (executed.has(current.id)) continue;
+                
+                const el = document.querySelector(`.node[data-id="${current.id}"]`);
+                if (el) el.classList.add('active-node');
+                
+                logToConsole(`NODE:${current.type}`, `Starting execution of [${current.data.varName || current.data.model || 'Node'}]...`);
+                
+                // Simulate processing
+                const duration = current.type === 'LLM' ? 2500 : current.type === 'Output' ? 800 : 1200;
+                const statusStr = current.type === 'LLM' ? 'Generating Tokens...' : current.type === 'Input' ? 'Extracting Context...' : 'Parsing Output...';
+                
+                await simulateNodeProgress(current.id, duration, statusStr);
+                
+                if (el) {
+                    el.classList.remove('active-node');
+                    el.classList.add('finished');
+                }
+                executed.add(current.id);
+                logToConsole(`NODE:${current.type}`, `Successfully completed.`);
+                
+                // Find outgoing connections
+                const outgoingConns = state.connections.filter(c => c.from === current.id);
+                const svg = document.getElementById('connections-svg');
+                
+                for (const conn of outgoingConns) {
+                    const pathEl = document.querySelector(`path.connection[onclick="deleteConnection('${conn.id}')"]`);
+                    if (pathEl) {
+                        pathEl.classList.add('executing');
+                        const dAttr = pathEl.getAttribute('d');
+                        
+                        // Create data orb
+                        const orb = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                        orb.setAttribute("r", "5");
+                        orb.setAttribute("class", "data-orb");
+                        orb.style.setProperty('--path-data', `path('${dAttr}')`);
+                        orb.style.setProperty('--travel-time', '800ms');
+                        svg.appendChild(orb);
+                        
+                        logToConsole('NETWORK', `Routing payload to Node ${conn.to.substring(0,4)}...`);
+                        
+                        await new Promise(r => setTimeout(r, 800)); // Travel time
+                        
+                        if (orb.parentNode) svg.removeChild(orb);
+                        pathEl.classList.remove('executing');
+                    }
+                    
+                    const nextNode = state.nodes[conn.to];
+                    if (nextNode && !executed.has(nextNode.id) && !queue.includes(nextNode)) {
+                        queue.push(nextNode);
+                    }
+                }
+            }
+            
+            logToConsole('SYSTEM', 'Execution sequence complete. All nodes verified.');
+            
+            // Cleanup
+            await new Promise(r => setTimeout(r, 3000));
+            document.body.classList.remove('focus-mode');
+            consoleEl.classList.remove('open');
+            document.querySelectorAll('.node').forEach(el => el.classList.remove('finished'));
+        }
+
+        
+        // Modify mousedown to handle selection
+        let isPanning = false;
+        let startPanX = 0, startPanY = 0;
+        let isDraggingNode = false;
+        let draggedNode = null;
+        let startDragMouseX = 0, startDragMouseY = 0;
+        let startNodeX = 0, startNodeY = 0;
+
+        const resizeObserver = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                const id = entry.target.dataset.id;
+                if (state.nodes[id]) {
+                    state.nodes[id].width = entry.target.offsetWidth;
+                    state.nodes[id].height = entry.target.offsetHeight;
+                }
+            }
+            updateConnections();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchWorkflows();
+            
+            const canvas = document.getElementById('canvas-container');
+            
+            canvas.addEventListener('mousedown', (e) => {
+                if (e.target.id === 'canvas-container' || e.target.id === 'workspace' || e.target.tagName.toLowerCase() === 'svg') {
+                    isPanning = true;
+                    startPanX = e.clientX - state.pan.x;
+                    startPanY = e.clientY - state.pan.y;
+                    canvas.style.cursor = 'grabbing';
+                    selectNode(null); // Deselect on background click
+                }
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (isPanning) {
+                    state.pan.x = e.clientX - startPanX;
+                    state.pan.y = e.clientY - startPanY;
+                    updateWorkspace();
+                } else if (isDraggingNode && draggedNode) {
+                    const dx = e.clientX - startDragMouseX;
+                    const dy = e.clientY - startDragMouseY;
+                    const id = draggedNode.dataset.id;
+                    state.nodes[id].x = startNodeX + dx;
+                    state.nodes[id].y = startNodeY + dy;
+                    draggedNode.style.transform = `translate(${state.nodes[id].x}px, ${state.nodes[id].y}px)`;
+                    updateConnections();
+                } else if (state.connecting.active) {
+                    state.connecting.mouseX = e.clientX;
+                    state.connecting.mouseY = e.clientY;
+                    updateConnections();
+                }
+            });
+
+            window.addEventListener('mouseup', () => {
+                isPanning = false;
+                isDraggingNode = false;
+                draggedNode = null;
+                canvas.style.cursor = 'default';
+                if (state.connecting.active) {
+                    state.connecting.active = false;
+                    updateConnections();
+                }
+            });
+        });
+
+        function updateWorkspace() {
+            document.getElementById('workspace').style.transform = `translate(${state.pan.x}px, ${state.pan.y}px)`;
+            document.getElementById('canvas-container').style.backgroundPosition = `${state.pan.x}px ${state.pan.y}px`;
+        }
+
+        function generateId() {
+            return Math.random().toString(36).substr(2, 9);
+        }
+
+        function addNode(type) {
+            const id = generateId();
+            const x = -state.pan.x + window.innerWidth / 2 - 130;
+            const y = -state.pan.y + window.innerHeight / 2 - 80;
+            const node = { id, type, x, y, data: {} };
+            state.nodes[id] = node;
+            renderNode(node);
+        }
+
+        function renderNode(node) {
+            const el = document.createElement('div');
+            el.className = 'node';
+            el.dataset.id = node.id;
+            el.dataset.type = node.type;
+            el.style.transform = `translate(${node.x}px, ${node.y}px)`;
+            
+            let contentHtml = '';
+            if (node.type === 'Input') {
+                contentHtml = `
+                    <div class="node-content">
+                        <label class="node-label">Variable Name</label>
+                        <input type="text" placeholder="e.g. user_query" class="node-input" value="${node.data.varName || ''}">
+                    </div>`;
+            } else if (node.type === 'LLM') {
+                contentHtml = `
+                    <div class="node-content">
+                        <label class="node-label">System Prompt</label>
+                        <textarea class="node-textarea" placeholder="You are a helpful assistant...">${node.data.prompt || ''}</textarea>
+                    </div>`;
+            } else if (node.type === 'Output') {
+                contentHtml = `
+                    <div class="node-content">
+                        <label class="node-label">Output Format</label>
+                        <input type="text" placeholder="JSON, Text, etc." class="node-input" value="${node.data.format || ''}">
+                    </div>`;
+            }
+
+            el.innerHTML = `
+                <div class="node-header">
+                    <span>
+                        ${node.type === 'Input' ? '<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background-color:#3b82f6;margin-right:6px;vertical-align:middle;"></span>' : node.type === 'LLM' ? '<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background-color:#a855f7;margin-right:6px;vertical-align:middle;"></span>' : '<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background-color:#4ade80;margin-right:6px;vertical-align:middle;"></span>'} 
+                        ${node.type} Node
+                    </span>
+                    <button class="delete-btn" title="Delete Node" onclick="deleteNode('${node.id}')">&times;</button>
+                </div>
+                ${contentHtml}
+                ${node.type !== 'Input' ? `<div class="port port-in" onmousedown="startConnection(event, '${node.id}', 'in')" onmouseup="endConnection(event, '${node.id}', 'in')"></div>` : ''}
+                ${node.type !== 'Output' ? `<div class="port port-out" onmousedown="startConnection(event, '${node.id}', 'out')" onmouseup="endConnection(event, '${node.id}', 'out')"></div>` : ''}
+            `;
+            
+            document.getElementById('nodes-container').appendChild(el);
+            resizeObserver.observe(el);
+
+            const header = el.querySelector('.node-header');
+            header.addEventListener('mousedown', (e) => {
+                if(e.target.tagName.toLowerCase() === 'button') return;
+                selectNode(node.id);
+                isDraggingNode = true;
+                draggedNode = el;
+                startDragMouseX = e.clientX;
+                startDragMouseY = e.clientY;
+                startNodeX = state.nodes[node.id].x;
+                startNodeY = state.nodes[node.id].y;
+                e.stopPropagation();
+            });
+            
+            const inputs = el.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', (e) => {
+                    if (e.target.tagName === 'INPUT') {
+                        if (node.type === 'Input') node.data.varName = e.target.value;
+                        if (node.type === 'Output') node.data.format = e.target.value;
+                    } else if (e.target.tagName === 'TEXTAREA') {
+                        node.data.prompt = e.target.value;
+                    }
+                });
+                input.addEventListener('mousedown', e => e.stopPropagation());
+            });
+        }
+
+        function deleteNode(id) {
+            delete state.nodes[id];
+            state.connections = state.connections.filter(c => c.from !== id && c.to !== id);
+            const el = document.querySelector(`.node[data-id="${id}"]`);
+            if (el) {
+                resizeObserver.unobserve(el);
+                el.remove();
+            }
+            if (state.connecting.sourceNode === id) {
+                state.connecting.active = false;
+            }
+            updateConnections();
+        }
+
+        function startConnection(e, nodeId, type) {
+            e.stopPropagation();
+            state.connecting = {
+                active: true,
+                sourceNode: nodeId,
+                sourceType: type,
+                mouseX: e.clientX,
+                mouseY: e.clientY
+            };
+        }
+
+        function endConnection(e, nodeId, type) {
+            if (!state.connecting.active) return;
+            e.stopPropagation();
+            
+            const srcNode = state.connecting.sourceNode;
+            const srcType = state.connecting.sourceType;
+            
+            if (srcNode !== nodeId && srcType !== type) {
+                const from = srcType === 'out' ? srcNode : nodeId;
+                const to = srcType === 'out' ? nodeId : srcNode;
+                
+                const exists = state.connections.find(c => c.from === from && c.to === to);
+                if (!exists) {
+                    state.connections.push({ id: generateId(), from, to });
+                }
+            }
+            state.connecting.active = false;
+            updateConnections();
+        }
+
+        function deleteConnection(id) {
+            state.connections = state.connections.filter(c => c.id !== id);
+            updateConnections();
+        }
+
+        function drawBezier(x1, y1, x2, y2) {
+            const dx = Math.abs(x2 - x1) * 0.5;
+            const cp1x = x1 + Math.max(dx, 40);
+            const cp1y = y1;
+            const cp2x = x2 - Math.max(dx, 40);
+            const cp2y = y2;
+            return `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}`;
+        }
+
+        function updateConnections() {
+            const svg = document.getElementById('connections-svg');
+            let paths = '';
+            
+            state.connections.forEach(conn => {
+                const fromNode = state.nodes[conn.from];
+                const toNode = state.nodes[conn.to];
+                if (!fromNode || !toNode) return;
+                
+                const x1 = fromNode.x + (fromNode.width || 260) + 8;
+                const y1 = fromNode.y + (fromNode.height || 120) / 2;
+                
+                const x2 = toNode.x - 8;
+                const y2 = toNode.y + (toNode.height || 120) / 2;
+                
+                paths += `<path class="connection" d="${drawBezier(x1, y1, x2, y2)}" onclick="deleteConnection('${conn.id}')" title="Click to delete connection" />`;
+            });
+            
+            if (state.connecting.active) {
+                const srcNode = state.nodes[state.connecting.sourceNode];
+                if (srcNode) {
+                    const isOut = state.connecting.sourceType === 'out';
+                    
+                    const x1 = isOut ? srcNode.x + (srcNode.width || 260) + 8 : srcNode.x - 8;
+                    const y1 = srcNode.y + (srcNode.height || 120) / 2;
+                    
+                    const x2 = state.connecting.mouseX - state.pan.x;
+                    const y2 = state.connecting.mouseY - state.pan.y;
+                    
+                    if (isOut) {
+                        paths += `<path class="temp-connection" d="${drawBezier(x1, y1, x2, y2)}" />`;
+                    } else {
+                        paths += `<path class="temp-connection" d="${drawBezier(x2, y2, x1, y1)}" />`;
+                    }
+                }
+            }
+            
+            svg.innerHTML = paths;
+        }
+
+        let allWorkflows = [];
+
+        async function fetchWorkflows() {
+            try {
+                const res = await fetch('/api/omniflow');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.length > 0) {
+                        allWorkflows = data;
+                        const select = document.getElementById('template-select');
+                        data.forEach((wf, index) => {
+                            const opt = document.createElement('option');
+                            opt.value = index;
+                            opt.textContent = wf.name;
+                            select.appendChild(opt);
+                        });
+                        
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const loadId = urlParams.get('id');
+                        
+                        let wfToLoad = data[0];
+                        if (loadId) {
+                            const found = data.find(w => w.id == loadId);
+                            if (found) {
+                                wfToLoad = found;
+                                select.value = data.indexOf(found);
+                            }
+                        }
+                        
+                        loadWorkflow(wfToLoad);
+                    }
+                }
+            } catch (e) {
+                console.log("No existing workflow or error fetching:", e);
+            }
+        }
+
+        function loadWorkflow(wf) {
+            if (wf.nodes_json) {
+                state.nodes = wf.nodes_json.nodes || {};
+                state.connections = wf.nodes_json.connections || [];
+                document.getElementById('nodes-container').innerHTML = '';
+                Object.values(state.nodes).forEach(n => renderNode(n));
+                setTimeout(updateConnections, 50);
+                state.currentWorkflowId = wf.id;
+            }
+        }
+
+        function loadSelectedTemplate() {
+            const select = document.getElementById('template-select');
+            const index = select.value;
+            if (index !== "") {
+                loadWorkflow(allWorkflows[index]);
+                
+                // Re-center view on template load
+                state.pan.x = 0;
+                state.pan.y = 0;
+                updateWorkspace();
+            }
+        }
+
+        async function saveWorkflow() {
+            const btn = document.querySelector('.save-btn');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = 'Saving...';
+            try {
+                const payload = {
+                    id: state.currentWorkflowId || null,
+                    nodes_json: { nodes: state.nodes, connections: state.connections }
+                };
+                const res = await fetch('/api/omniflow', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    btn.innerHTML = 'Saved!';
+                    setTimeout(() => btn.innerHTML = originalHtml, 2000);
+                } else {
+                    throw new Error('Server returned ' + res.status);
+                }
+            } catch (e) {
+                console.error("Save failed:", e);
+                btn.innerHTML = 'Error!';
+                setTimeout(() => btn.innerHTML = originalHtml, 2000);
+            }
+        }
+    </script>
+</body>
+</html>

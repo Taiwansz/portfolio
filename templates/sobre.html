@@ -3,74 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sobre Mim</title>
+    <meta name="description" content="Sobre Matheus Sousa dos Santos — Trajetória, habilidades e paixões na tecnologia.">
+    <title>Sobre Mim — Matheus Sousa dos Santos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <header>
-        <nav>
-            <img src="{{ url_for('static', filename='images/M.png') }}" alt="Logo" class="nav-logo">
-            <div class="cntr-nav">
-                <a href="{{ url_for('home') }}">Início</a>
-                <a href="{{ url_for('sobre') }}">Sobre Mim</a>
-                <a href="{{ url_for('projetos') }}">Projetos</a>
+
+    
+    <!-- 1. Cinematic Preloader -->
+    <div id="preloader">
+        <span id="loader-count">0%</span>
+    </div>
+
+    <!-- 2. Page Transition Layer -->
+    <div class="page-transition-layer"></div>
+
+    <div class="cursor-follower" id="cursor-follower"></div>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="nav-logo">
+                <img src="{{ url_for('static', filename='images/M.png') }}" alt="Logo">
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link">Início</a>
+                <a href="{{ url_for('sobre') }}" class="nav-link active">Sobre Mim</a>
+                <a href="{{ url_for('projetos') }}" class="nav-link">Projetos</a>
             </div>
-            <i class="ri-menu-fill"></i>
-        </nav>
-    </header>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="{{ url_for('home') }}">Início</a>
+        <a href="{{ url_for('sobre') }}">Sobre Mim</a>
+        <a href="{{ url_for('projetos') }}">Projetos</a>
+    </div>
+
     <main>
-        <div class="one">
-            <h1>Sobre Mim</h1>
-        </div>
-        <div class="text">
-            <h2>Introdução</h2>
-            <p>
-                Sou Matheus Sousa dos Santos, estudante de Ciências da Computação, fascinado pela forma como a tecnologia pode moldar o mundo ao nosso redor.
-                Recentemente, finalizei meu portfólio pessoal, um projeto que é o reflexo do que eu acredito: design elegante e funcionalidade robusta trabalhando juntos
-                para criar experiências digitais memoráveis.
-            </p>
-            <hr>
+        <!-- Page Hero -->
+        <section class="page-hero">
+            <h1 class="text-display clip-reveal">Sobre<br><span>Mim</span></h1>
+            <p class="text-eyebrow scroll-reveal">Conheça minha trajetória e paixões</p>
+        </section>
 
-            <h2>Minhas Paixões</h2>
-            <p>
-                Meu interesse vai além de escrever código. Gosto de entender o propósito por trás de cada projeto, explorando como a tecnologia pode resolver problemas reais
-                e tornar a vida das pessoas mais fácil e conectada. No desenvolvimento do meu portfólio, mergulhei em frameworks como Flask, testei diferentes abordagens e
-                técnicas de design, e me desafiei a criar algo que fosse ao mesmo tempo inovador e intuitivo.
-            </p>
-            <hr>
-
-            <h2>Curiosidade e Aprendizado</h2>
-            <p>
-                Minha curiosidade não tem limites: do front-end ao back-end, gosto de aprender um pouco de tudo. Tenho especial interesse em desenvolvimento web, design de
-                interfaces, experiência do usuário, e estou sempre experimentando novas linguagens de programação e ferramentas para ampliar minhas habilidades. Recentemente,
-                também tenho me aventurado no mundo do empreendedorismo digital através de projetos acadêmicos como a TH Aspect, uma marca de streetwear, e a ThLoop Corporation,
-                que explora conceitos como a locação de caçambas. Esses projetos são experimentos acadêmicos, mas têm me ensinado muito sobre negócios, marketing e inovação.
-            </p>
-            <hr>
-
-            <h2>Colaboração e Aprendizado Contínuo</h2>
-            <p>
-                Sou uma pessoa que valoriza o aprendizado contínuo e a colaboração. Acredito que as melhores ideias nascem do trabalho em equipe e de um ambiente onde todos
-                têm voz. Por isso, estou sempre disposto a compartilhar conhecimento, aprender com os outros e construir soluções que realmente façam a diferença.
-            </p>
-            <hr>
-
-            <h2>Conexões Criativas</h2>
-            <p>
-                Fora do mundo digital, sou apaixonado por música e cultura urbana, o que se reflete em muitos dos meus projetos criativos. Para mim, a tecnologia e a arte estão
-                profundamente conectadas, e é nesse cruzamento que encontro inspiração para criar.
-            </p>
-        </div>
-    </main>
-    <footer>
-        <div class="container">
-            <div class="social-links">
-                <a href="https://www.instagram.com/taiwan.sz/" target="_blank" rel="noopener noreferrer">Instagram</a>
-                <a href="https://github.com/Taiwansz" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a href="https://www.linkedin.com/in/mth3us" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <!-- About Content -->
+        <section class="about-content">
+            <div class="content-block scroll-reveal stagger-1 text-reveal">
+                <h2>Introdução</h2>
+                <p><span class="line">Sou Matheus Sousa dos Santos, um entusiasta que descobriu que o verdadeiro poder da tecnologia hoje não está apenas em escrever código, mas em <strong>orquestrar a inteligência artificial</strong>. Mais do que um desenvolvedor web tradicional, atuo como um <strong>Prompt Engineer</strong>. Meu foco é desenhar arquiteturas lógicas, reduzir o consumo de tokens e guiar modelos como GPT, Claude e Gemini a produzirem resultados precisos e robustos.</span></p>
             </div>
+
+            <div class="content-block scroll-reveal stagger-2 text-reveal">
+                <h2>TokLang SaaS & Middleware de IA</h2>
+                <p><span class="line">Um grande exemplo da minha especialidade é a criação do <strong>TokLang SaaS</strong> (<a href="https://toklang-twn.vercel.app/" target="_blank" style="color:var(--color-lime)">toklang-twn.vercel.app</a>). Trata-se de um middleware inteligente focado na compressão de prompts. A ideia nasceu da necessidade de escalar aplicações de IA de forma barata. Através de engenharia de prompt avançada, o TokLang permite que os usuários escrevam naturalmente enquanto o sistema comprime as requisições em background, gerando uma economia de até 85% em custos de API sem perder o contexto.</span></p>
+            </div>
+
+            <div class="content-block scroll-reveal stagger-3 text-reveal">
+                <h2>A Era da Orquestração</h2>
+                <p><span class="line">Minha verdadeira habilidade é a "conversa mecânica". Eu domino técnicas de Chain-of-Thought, otimização de contexto e construção de matrizes multi-agentes autônomos. Uso o desenvolvimento web (HTML, CSS, Flask, APIs) apenas como uma <em>canvas</em> para expor a genialidade das inteligências artificiais que eu orquestro. Para mim, o futuro do software pertence a quem sabe fazer as perguntas certas e coordenar agentes de IA em perfeita harmonia.</span></p>
+            </div>
+
+            <div class="content-block scroll-reveal stagger-4 text-reveal">
+                <h2>Colaboração e Aprendizado Contínuo</h2>
+                <p><span class="line">Sou uma pessoa que valoriza o aprendizado contínuo. Entender como LLMs (Large Language Models) pensam e reagem é um estudo diário. Acredito que as melhores soluções nascem da experimentação criativa e de um ambiente onde a tecnologia sirva para potencializar a mente humana.</span></p>
+            </div>
+
+            <div class="content-block scroll-reveal stagger-5 text-reveal">
+                <h2>Conexões Criativas</h2>
+                <p><span class="line">Fora do mundo digital, sou apaixonado por música e cultura urbana, o que se reflete em muitos dos meus projetos criativos. Para mim, a tecnologia e a arte estão</span>
+                <span class="line">profundamente conectadas, e é nesse cruzamento que encontro inspiração para criar.</span></p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Big CTA Footer -->
+    <section class="big-cta scroll-reveal">
+        <div class="big-cta-bg"></div>
+        <h2 class="big-cta-text">VAMOS<br>CONVERSAR</h2>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='images/M.png') }}" alt="Logo" style="width: 40px; border-radius: 50%;">
+                Matheus Sousa
+            </div>
+            <div class="social-links">
+                <a href="https://www.instagram.com/taiwan.sz/" target="_blank" rel="noopener noreferrer" class="social-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                    Instagram
+                </a>
+                <a href="https://github.com/Taiwansz" target="_blank" rel="noopener noreferrer" class="social-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/mth3us" target="_blank" rel="noopener noreferrer" class="social-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                    LinkedIn
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Matheus Sousa dos Santos. Todos os direitos reservados.</p>
         </div>
     </footer>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

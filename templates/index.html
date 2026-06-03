@@ -3,64 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfólio de Matheus Sousa dos Santos</title>
+    <meta name="description" content="Portfólio de Matheus Sousa dos Santos — Desenvolvedor Web, estudante de Ciências da Computação. Confira meus projetos e habilidades.">
+    <title>Matheus Sousa dos Santos — Desenvolvedor Web</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-
-    <div id="main">
-        <nav>
-            <img src="{{ url_for('static', filename='images/M.png') }}" alt="Logo" class="nav-logo">
-            <div class="cntr-nav">
-                <a href="{{ url_for('home') }}">Início</a>
-                <a href="{{ url_for('sobre') }}">Sobre Mim</a>
-                <a href="{{ url_for('projetos') }}">Projetos</a>
-            </div>
-            <i class="ri-menu-fill"></i>
-        </nav>
-        <div class="one">
-            <h1>Matheus <br> Sousa dos Santos</h1>
-        </div>
-
-        <div class="two">
-            <img src="{{ url_for('static', filename='images/me.png') }}" alt="pph" class="two-photo">
-
-            <div class="rght-two">
-                <h1>Sobre Mim</h1>
-                <p>Sou um estudante de Ciências da Computação na Unimax, apaixonado por tecnologia e desenvolvimento web. Em busca de novos desafios e oportunidades de crescimento profissional.</p>
-                <a href="{{ url_for('sobre') }}" class="btn-saiba-mais">Saiba Mais</a>
-            </div>
-        </div>
-
-        <div class="three">
-            <div class="card">
-                <img src="{{ url_for('static', filename='images/PORTCAPA.png') }}" alt="Imagem Projeto 1" class="card-img">
-                <h1>Projeto 1</h1>
-                    <a href="{{ url_for('portfolio') }}" class="btn-saiba-mais">Saiba Mais</a>
-            </div>
-            <div class="card">
-                <img src="{{ url_for('static', filename='images/CAUTION.png') }}" alt="Imagem Projeto 2" class="card-img">
-                <h1>Projeto 2</h1>
-                 <a href="javascript:void(0);" onclick="alert('Em breve, este projeto será acrescentado!')" class="btn-saiba-mais">Saiba Mais</a>
-                <p class="info-message" style="display: none;">Em breve será adicionado.</p>
-            </div>
-            <div class="card">
-                <img src="{{ url_for('static', filename='images/CAUTION.png') }}" alt="Imagem Projeto 3" class="card-img">
-                <h1>Projeto 3</h1>
-                 <a href="javascript:void(0);" onclick="alert('Em breve, este projeto será acrescentado!')" class="btn-saiba-mais">Saiba Mais</a>
-                <p class="info-message" style="display: none;">Em breve será adicionado.</p>
-            </div>
-        </div>
+    <!-- 1. Cinematic Preloader -->
+    <div id="preloader">
+        <span id="loader-count">0%</span>
     </div>
-    <footer>
-        <div class="container">
-            <div class="social-links">
-                <a href="https://www.instagram.com/taiwan.sz/" target="_blank" rel="noopener noreferrer">Instagram</a>
-                <a href="https://github.com/Taiwansz" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a href="https://www.linkedin.com/in/mth3us" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+
+    <!-- 2. Page Transition Layer -->
+    <div class="page-transition-layer"></div>
+
+    <!-- 3. Background Orb -->
+    <div class="hero-blur-orb"></div>
+
+    <div class="cursor-follower" id="cursor-follower"></div>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="nav-logo">
+                <img src="{{ url_for('static', filename='images/M.png') }}" alt="Logo">
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link active">Início</a>
+                <a href="{{ url_for('sobre') }}" class="nav-link">Sobre Mim</a>
+                <a href="{{ url_for('projetos') }}" class="nav-link">Projetos</a>
             </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="{{ url_for('home') }}">Início</a>
+        <a href="{{ url_for('sobre') }}">Sobre Mim</a>
+        <a href="{{ url_for('projetos') }}">Projetos</a>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <div class="hero-content">
+                <h2 class="hero-eyebrow">Olá, eu sou Matheus Sousa dos Santos</h2>
+                <h1 class="hero-title">Prompt Engineer</h1>
+                <p class="hero-subtitle">Especialista em Orquestração de IAs • Criador do TokLang SaaS • Estudante de Ciência da Computação</p>
+                <div class="hero-cta">
+                    <a href="{{ url_for('projetos') }}" class="btn-primary">Ver Projetos</a>
+                    <a href="{{ url_for('sobre') }}" class="btn-outline">Sobre Mim</a>
+                </div>
+            </div>
+            
+            <div class="scroll-indicator">
+                <span>Scroll</span>
+                <div class="arrow"></div>
+            </div>
+        </section>
+
+        <!-- Marquee Section -->
+        <section class="marquee">
+            <div class="marquee-track">
+                <span class="marquee-item">DEVELOPER</span>
+                <div class="marquee-separator"></div>
+                <span class="marquee-item">DESIGNER</span>
+                <div class="marquee-separator"></div>
+                <span class="marquee-item">CREATIVE</span>
+                <div class="marquee-separator"></div>
+                <span class="marquee-item">DEVELOPER</span>
+                <div class="marquee-separator"></div>
+                <span class="marquee-item">DESIGNER</span>
+                <div class="marquee-separator"></div>
+                <span class="marquee-item">CREATIVE</span>
+                <div class="marquee-separator"></div>
+            </div>
+        </section>
+
+        <!-- About Preview Section -->
+        <section class="about-preview" id="about">
+            <div class="about-photo-wrapper scroll-reveal stagger-1">
+                <img src="{{ url_for('static', filename='images/me.png') }}" alt="Matheus Sousa dos Santos" class="about-photo" loading="lazy">
+            </div>
+            <div class="about-text scroll-reveal stagger-2">
+                <h2>Sobre Mim</h2>
+                <p>Sou um estudante de Ciências da Computação na Unimax, apaixonado por tecnologia e desenvolvimento web. Em busca de novos desafios e oportunidades de crescimento profissional.</p>
+                <a href="{{ url_for('sobre') }}" class="btn-primary">Saiba Mais</a>
+            </div>
+        </section>
+
+        <!-- Expertise Hover List Section (Replacing Bento) -->
+        <section class="expertise-list">
+            <div class="section-header scroll-reveal">
+                <p class="text-eyebrow">// EXPERTISE</p>
+                <h2>Arsenal Técnico</h2>
+            </div>
+            
+            <div class="expertise-container">
+                <div class="skill-row scroll-reveal stagger-1">
+                    <span class="skill-num">01</span>
+                    <h3 class="skill-name">PROMPT ENGINEERING</h3>
+                    <p class="skill-desc">Otimização de Contexto, Chain-of-Thought, Redução de Alucinações, Engenharia de Prompts Avançada.</p>
+                </div>
+                
+                <div class="skill-row scroll-reveal stagger-2">
+                    <span class="skill-num">02</span>
+                    <h3 class="skill-name">AI MIDDLEWARE</h3>
+                    <p class="skill-desc">Desenvolvimento de sistemas como TokLang (Compressão de Prompts, redução de 85% em tokens).</p>
+                </div>
+                
+                <div class="skill-row scroll-reveal stagger-3">
+                    <span class="skill-num">03</span>
+                    <h3 class="skill-name">ORQUESTRAÇÃO DE LLMs</h3>
+                    <p class="skill-desc">Integração com GPT, Claude, Gemini. Construção de matrizes multi-agentes autônomos.</p>
+                </div>
+                
+                <div class="skill-row scroll-reveal stagger-4">
+                    <span class="skill-num">04</span>
+                    <h3 class="skill-name">FULL-STACK SAAS</h3>
+                    <p class="skill-desc">Capacidade de coordenar Inteligências Artificiais para construir produtos web complexos de ponta a ponta.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Preview Section -->
+        <section class="projects-preview" id="projects">
+            <div class="section-header scroll-reveal">
+                <p class="text-eyebrow">Portfólio</p>
+                <h2>Projetos</h2>
+            </div>
+            <div class="cards-grid">
+                <div class="card scroll-reveal stagger-1">
+                    <div class="card-img-wrapper">
+                        <img src="{{ url_for('static', filename='images/toklang_cover.png') }}" alt="TokLang" class="card-img" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>TokLang SaaS</h3>
+                        <div class="card-tags">
+                            <span class="tag">AI Middleware</span>
+                            <span class="tag">Prompt Compression</span>
+                        </div>
+                        <p>Plataforma que comprime prompts de IA automaticamente, economizando até 85% em tokens (GPT/Claude/Gemini).</p>
+                        <div style="text-align: center; margin-top: auto; padding-top: 1.5rem;">
+                            <a href="https://toklang-twn.vercel.app/" target="_blank" class="btn-primary">Ver Projeto</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card scroll-reveal stagger-2">
+                    <div class="card-img-wrapper">
+                        <img src="{{ url_for('static', filename='images/omniflow_cover.png') }}" alt="OmniFlow AI" class="card-img" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>OmniFlow AI</h3>
+                        <div class="card-tags">
+                            <span class="tag">AI Orchestrator</span>
+                            <span class="tag">Node Editor</span>
+                        </div>
+                        <p>Plataforma Magnum Opus: Editor visual construído do zero em Canvas/Vanilla JS para desenhar fluxos lógicos de Agentes de Inteligência Artificial usando curvas matemáticas Bezier.</p>
+                        <div style="text-align: center; margin-top: auto; padding-top: 1.5rem;">
+                            <a href="{{ url_for('omniflow') }}" class="btn-primary">Ver Projeto</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card scroll-reveal stagger-3">
+                    <div class="card-img-wrapper">
+                        <img src="{{ url_for('static', filename='images/cryptovision_cover.png') }}" alt="CryptoVision" class="card-img" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>CryptoVision</h3>
+                        <div class="card-tags">
+                            <span class="tag">API</span>
+                            <span class="tag">Chart.js</span>
+                        </div>
+                        <p>Dashboard financeiro em tempo real com histórico de criptomoedas.</p>
+                        <div style="text-align: center; margin-top: auto; padding-top: 1.5rem;">
+                            <a href="{{ url_for('cryptovision') }}" class="btn-primary">Ver Projeto</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card scroll-reveal stagger-4">
+                    <div class="card-img-wrapper">
+                        <img src="{{ url_for('static', filename='images/auraweather_cover.png') }}" alt="AuraWeather" class="card-img" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>AuraWeather</h3>
+                        <div class="card-tags">
+                            <span class="tag">Weather API</span>
+                            <span class="tag">Dynamic UI</span>
+                        </div>
+                        <p>Dashboard meteorológico com interface que reage ao clima atual.</p>
+                        <div style="text-align: center; margin-top: auto; padding-top: 1.5rem;">
+                            <a href="{{ url_for('auraweather') }}" class="btn-primary">Ver Projeto</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card scroll-reveal stagger-5">
+                    <div class="card-img-wrapper">
+                        <img src="{{ url_for('static', filename='images/sonicweave_cover.png') }}" alt="SonicWeave" class="card-img" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>SonicWeave</h3>
+                        <p>Procedural Web Audio API Synthesizer with real-time oscilloscope.</p>
+                        <div style="text-align: center; margin-top: auto; padding-top: 1.5rem;">
+                            <a href="/projetos/sonicweave" class="btn-primary">Ver Projeto</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Big CTA Footer -->
+    <section class="big-cta scroll-reveal">
+        <div class="big-cta-bg"></div>
+        <h2 class="big-cta-text">VAMOS<br>CONVERSAR</h2>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='images/M.png') }}" alt="Logo" style="width: 40px; border-radius: 50%;">
+                Matheus Sousa
+            </div>
+            <div class="social-links">
+                <a href="https://www.instagram.com/taiwan.sz/" target="_blank" rel="noopener noreferrer" class="social-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                    Instagram
+                </a>
+                <a href="https://github.com/Taiwansz" target="_blank" rel="noopener noreferrer" class="social-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/mth3us" target="_blank" rel="noopener noreferrer" class="social-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                    LinkedIn
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Matheus Sousa dos Santos. Todos os direitos reservados.</p>
         </div>
     </footer>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body> 
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
 </html>
