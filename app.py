@@ -15,11 +15,17 @@ load_dotenv()
 
 app = Flask(__name__)
 # Ensure the instance folder exists
-os.makedirs(app.instance_path, exist_ok=True)
+try:
+    os.makedirs(app.instance_path, exist_ok=True)
+except Exception:
+    pass
 
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', os.urandom(24))
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB max upload
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+if os.environ.get('VERCEL'):
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/database.db'
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
