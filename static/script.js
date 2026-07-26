@@ -557,17 +557,28 @@ document.addEventListener('DOMContentLoaded', () => {
         
         bigCta.addEventListener('click', () => {
             const email = 'std.matheus@gmail.com';
-            navigator.clipboard.writeText(email).then(() => {
-                const ctaText = bigCta.querySelector('.big-cta-text');
-                const originalText = ctaText.textContent;
-                ctaText.textContent = "COPIADO!";
+            const ctaText = bigCta.querySelector('.big-cta-text');
+            const originalHTML = ctaText.getAttribute('data-original-html') || ctaText.innerHTML;
+            
+            if (!ctaText.getAttribute('data-original-html')) {
+                ctaText.setAttribute('data-original-html', originalHTML);
+            }
+
+            const showSuccess = () => {
+                ctaText.innerHTML = "EMAIL COPIADO!";
                 ctaText.style.color = 'var(--color-lime)';
                 
                 setTimeout(() => {
-                    ctaText.textContent = originalText;
+                    ctaText.innerHTML = ctaText.getAttribute('data-original-html') || originalHTML;
                     ctaText.style.color = '';
                 }, 2000);
-            });
+            };
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(email).then(showSuccess).catch(showSuccess);
+            } else {
+                showSuccess();
+            }
         });
     }
 
