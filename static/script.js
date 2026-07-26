@@ -265,23 +265,39 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ═══════════════════════════════════════════
        9. MOBILE MENU TOGGLE
        ═══════════════════════════════════════════ */
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const navElement    = document.getElementById('main-nav');
+    const navToggle = document.getElementById('nav-toggle') || document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu') || document.getElementById('main-nav');
 
-    if (mobileMenuBtn && navElement) {
-        mobileMenuBtn.addEventListener('click', () => {
-            const isOpen = navElement.classList.toggle('nav-open');
-            mobileMenuBtn.classList.toggle('active');
+    if (navToggle && mobileMenu) {
+        navToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = mobileMenu.classList.toggle('open');
+            mobileMenu.classList.toggle('active', isOpen);
+            navToggle.classList.toggle('open', isOpen);
+            navToggle.classList.toggle('active', isOpen);
             document.body.classList.toggle('no-scroll', isOpen);
         });
 
-        // Close menu when a nav link is clicked
-        navElement.querySelectorAll('a').forEach(link => {
+        // Close menu when a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
-                navElement.classList.remove('nav-open');
-                mobileMenuBtn.classList.remove('active');
+                mobileMenu.classList.remove('open');
+                mobileMenu.classList.remove('active');
+                navToggle.classList.remove('open');
+                navToggle.classList.remove('active');
                 document.body.classList.remove('no-scroll');
             });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !navToggle.contains(e.target)) {
+                mobileMenu.classList.remove('open');
+                mobileMenu.classList.remove('active');
+                navToggle.classList.remove('open');
+                navToggle.classList.remove('active');
+                document.body.classList.remove('no-scroll');
+            }
         });
     }
 
