@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Projetos de Matheus Sousa dos Santos — Portfólio de desenvolvimento web com HTML, CSS, JavaScript e Flask.">
+    <meta name="description" content="Projetos de Matheus Sousa dos Santos — Atlas Engineering OS, TokLang, Thallium e automações.">
     <title>Projetos — Matheus Sousa dos Santos</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,6 @@
 </head>
 <body>
 
-    
     <!-- 1. Cinematic Preloader -->
     <div id="preloader">
         <span id="loader-count">0%</span>
@@ -48,99 +47,63 @@
     <main>
         <!-- Page Hero -->
         <section class="page-hero">
-            <h1 class="text-display clip-reveal">Proje<span>tos</span></h1>
-            <p class="text-eyebrow scroll-reveal">Confira meus trabalhos e experiências</p>
+            <h1 class="text-display clip-reveal">Meus<br><span>Projetos</span></h1>
+            <p class="text-eyebrow scroll-reveal">Soluções SaaS, Governança Agent-Native & Core Banking</p>
         </section>
 
-        <!-- Projects List -->
-        <section class="projects-list" style="padding: 0 5vw 10rem 5vw;">
-            <!-- Project 1 -->
-            <div class="project-info scroll-reveal stagger-1" style="margin-bottom: 2rem; border-left-color: var(--color-lime);">
-                <span class="project-number">01</span>
-                <h2 class="text-heading">Atlas Engineering OS</h2>
-                <p class="text-body" style="max-width: 800px; margin: 1.5rem 0;">O Sistema Operacional de Engenharia para a Era da IA. Permite orquestrar agentes inteligentes de forma modular, com memória persistente e controle de ciclo de vida de tarefas complexas.</p>
-                <div class="project-tags" style="display: flex; gap: 0.5rem; margin-bottom: 2.5rem;">
-                    <span class="tag">TypeScript</span>
-                    <span class="tag">Node.js</span>
-                    <span class="tag">AI Agents</span>
+        <!-- Projects Grid -->
+        <section class="projects-preview" style="padding-top: 0;">
+            <div class="cards-grid">
+                <div class="card scroll-reveal stagger-1">
+                    <div class="card-img-wrapper">
+                        <img src="{{ url_for('static', filename='images/atlas_cover.png') }}" alt="Atlas Engineering OS" class="card-img" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>Atlas Engineering OS</h3>
+                        <div class="card-tags">
+                            <span class="tag">Next.js 14 SaaS</span>
+                            <span class="tag">AST Drift Auditor</span>
+                        </div>
+                        <p>Sistema Operacional de Engenharia orquestrado por múltiplos agentes inteligentes estruturados sob governança constitucional, auditoria AST e protocolo Ponytail.</p>
+                        <div style="display: flex; gap: 0.5rem; justify-content: center; margin-top: auto; padding-top: 1.5rem;">
+                            <a href="https://github.com/Taiwansz/atlas" target="_blank" class="btn-outline">GitHub</a>
+                            <a href="https://atlas-landing-page.vercel.app" target="_blank" class="btn-primary">Ver na Vercel</a>
+                        </div>
+                    </div>
                 </div>
-                <div style="text-align: center; margin-top: 2rem;">
-                    <a href="https://github.com/Taiwansz/atlas" target="_blank" class="btn-primary">Ver Projeto</a>
-                </div>
-            </div>
 
-            <!-- Project 2 -->
-            <div class="project-info scroll-reveal stagger-1-5" style="margin-bottom: 2rem; border-left-color: var(--color-accent);">
-                <span class="project-number">02</span>
-                <h2 class="text-heading">TokLang</h2>
-                <p class="text-body" style="max-width: 800px; margin: 1.5rem 0;">Middleware de compressão de prompts de alto desempenho. Reduz em até 85% o consumo de tokens e a latência de contexto em chamadas de APIs de LLMs, operando com zero dependências externas.</p>
-                <div class="project-tags" style="display: flex; gap: 0.5rem; margin-bottom: 2.5rem;">
-                    <span class="tag">JavaScript</span>
-                    <span class="tag">Prompt Compression</span>
-                    <span class="tag">Vercel</span>
+                <div class="card scroll-reveal stagger-2">
+                    <div class="card-img-wrapper">
+                        <img src="{{ url_for('static', filename='images/toklang_cover.png') }}" alt="TokLang" class="card-img" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>TokLang</h3>
+                        <div class="card-tags">
+                            <span class="tag">AI Middleware</span>
+                            <span class="tag">Prompt Compression</span>
+                        </div>
+                        <p>Compilador e middleware de compressão semântica em tempo real que traduz linguagem natural em representações otimizadas, economizando até 85% de tokens.</p>
+                        <div style="text-align: center; margin-top: auto; padding-top: 1.5rem;">
+                            <a href="https://github.com/Taiwansz/TokLang" target="_blank" class="btn-primary">Ver Projeto</a>
+                        </div>
+                    </div>
                 </div>
-                <div style="text-align: center; margin-top: 2rem;">
-                    <a href="https://github.com/Taiwansz/TokLang" target="_blank" class="btn-primary">Ver Projeto</a>
-                </div>
-            </div>
 
-            <!-- Project 3 -->
-            <div class="project-info scroll-reveal stagger-2" style="margin-bottom: 2rem;">
-                <span class="project-number">03</span>
-                <h2 class="text-heading">Ad Creative Studio</h2>
-                <p class="text-body" style="max-width: 800px; margin: 1.5rem 0;">Plataforma web para geração de criativos publicitários inteligentes. Converte fotos de produtos em prompts visuais realistas e roteiros estruturados para vídeos do Reels e TikTok, integrado com OpenAI Vision e Supabase.</p>
-                <div class="project-tags" style="display: flex; gap: 0.5rem; margin-bottom: 2.5rem;">
-                    <span class="tag">Next.js 15</span>
-                    <span class="tag">TypeScript</span>
-                    <span class="tag">OpenAI API</span>
-                </div>
-                <div style="text-align: center; margin-top: 2rem;">
-                    <a href="https://github.com/Taiwansz/ai-prompter-studio" target="_blank" class="btn-primary">Ver Projeto</a>
-                </div>
-            </div>
-
-            <!-- Project 4 -->
-            <div class="project-info scroll-reveal stagger-3" style="margin-bottom: 2rem;">
-                <span class="project-number">04</span>
-                <h2 class="text-heading">Feriados do Brasil</h2>
-                <p class="text-body" style="max-width: 800px; margin: 1.5rem 0;">Sistema inteligente de calendário que consolida feriados federais, estaduais e municipais para todos os 5.570 municípios do Brasil em tempo real.</p>
-                <div class="project-tags" style="display: flex; gap: 0.5rem; margin-bottom: 2.5rem;">
-                    <span class="tag">HTML5</span>
-                    <span class="tag">Node.js</span>
-                    <span class="tag">Express</span>
-                    <span class="tag">Vercel</span>
-                </div>
-                <div style="text-align: center; margin-top: 2rem;">
-                    <a href="https://github.com/Taiwansz/feriados-brasil" target="_blank" class="btn-primary">Ver Projeto</a>
-                </div>
-            </div>
-
-            <!-- Project 5 -->
-            <div class="project-info scroll-reveal stagger-4" style="margin-bottom: 2rem;">
-                <span class="project-number">05</span>
-                <h2 class="text-heading">Tharium House</h2>
-                <p class="text-body" style="max-width: 800px; margin: 1.5rem 0;">Jogo eletrônico integrado com modelos de Inteligência Artificial para tomada de decisão dinâmica. Vencedor do 1º lugar no evento tradicional TechDay UniMAX.</p>
-                <div class="project-tags" style="display: flex; gap: 0.5rem; margin-bottom: 2.5rem;">
-                    <span class="tag">Inteligência Artificial</span>
-                    <span class="tag">Jogos Digitais</span>
-                    <span class="tag">UniMAX</span>
-                </div>
-                <div style="text-align: center; margin-top: 2rem;">
-                    <span class="btn-outline" style="cursor: default;">Projeto Premiado</span>
-                </div>
-            </div>
-
-            <!-- Project 6 -->
-            <div class="project-info scroll-reveal stagger-5">
-                <span class="project-number">06</span>
-                <h2 class="text-heading">Este Portfólio</h2>
-                <p class="text-body" style="max-width: 800px; margin: 1.5rem 0;">Desenvolvimento do próprio portfólio responsivo em Flask, com foco em uma arquitetura CSS moderna (variáveis e propriedades customizadas) para transição de temas e alta performance.</p>
-                <div class="project-tags" style="display: flex; gap: 0.5rem; margin-bottom: 2.5rem;">
-                    <span class="tag">Flask</span>
-                    <span class="tag">CSS Custom Properties</span>
-                </div>
-                <div style="text-align: center; margin-top: 2rem;">
-                    <a href="{{ url_for('portfolio') }}" class="btn-outline">Ver Arquitetura</a>
+                <div class="card scroll-reveal stagger-3">
+                    <div class="card-img-wrapper">
+                        <img src="{{ url_for('static', filename='images/thallium_cover.png') }}" alt="Thallium" class="card-img" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>Thallium Core Ledger</h3>
+                        <div class="card-tags">
+                            <span class="tag">Core Banking</span>
+                            <span class="tag">Double-Entry Ledger</span>
+                        </div>
+                        <p>Core bancário digital simulando contas, empréstimos e livros-razão de contabilidade de dupla entrada (premiado no TechDay UniMAX).</p>
+                        <div style="text-align: center; margin-top: auto; padding-top: 1.5rem;">
+                            <a href="https://github.com/Taiwansz/Thallium" target="_blank" class="btn-primary">Ver Projeto</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -156,25 +119,22 @@
         <div class="footer-inner">
             <div class="footer-logo">
                 <img src="{{ url_for('static', filename='images/M.png') }}" alt="Logo" style="width: 40px; border-radius: 50%;">
-                Matheus Sousa
+                Matheus Sousa dos Santos
             </div>
             <div class="social-links">
                 <a href="https://www.instagram.com/taiwan.sz/" target="_blank" rel="noopener noreferrer" class="social-link">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
                     Instagram
                 </a>
                 <a href="https://github.com/Taiwansz" target="_blank" rel="noopener noreferrer" class="social-link">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
                     GitHub
                 </a>
                 <a href="https://www.linkedin.com/in/mth3us" target="_blank" rel="noopener noreferrer" class="social-link">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
                     LinkedIn
                 </a>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 Matheus Sousa dos Santos. Todos os direitos reservados.</p>
+            <p>&copy; 2026 Matheus Sousa dos Santos. Todos os direitos reservados.</p>
         </div>
     </footer>
 
