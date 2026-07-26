@@ -502,3 +502,45 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
     .proj-list { grid-template-columns: 1fr; }
     .proj-hero { min-height: auto; padding-top: 2rem; }
 }
+
+/* ----------------------------------------------------------
+   19. MOBILE RESPONSIVE FIXES FOR SOBRE MIM & CONTENT BLOCKS
+   ---------------------------------------------------------- */
+@media (max-width: 768px) {
+  .content-block {
+    padding: 1.5rem 1.25rem !important;
+    margin-bottom: 1.5rem !important;
+    max-width: 100% !important;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .text-reveal .line {
+    clip-path: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    white-space: normal !important;
+    display: inline !important;
+  }
+
+  .text-reveal.visible .line {
+    transform: none !important;
+  }
+
+  .page-hero {
+    padding: 5.5rem 1rem 2rem !important;
+  }
+
+  .page-hero .text-display {
+    font-size: clamp(2rem, 9vw, 3.5rem) !important;
+    line-height: 1.15 !important;
+  }
+
+  .about-content {
+    padding: 0 1rem 4rem !important;
+  }
+
+  .content-block a {
+    word-break: break-all;
+  }
+}
